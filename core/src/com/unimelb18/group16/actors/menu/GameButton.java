@@ -27,7 +27,7 @@ public abstract class GameButton extends Button {
 
     protected Rectangle bounds;
     private Skin skin;
-
+    protected String textureType="sprite";
 
     public GameButton(Rectangle bounds) {
         this.bounds = bounds;

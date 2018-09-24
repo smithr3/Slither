@@ -31,6 +31,13 @@ public class Runner extends GameActor {
 
     private int jumpCount;
 
+    private float speed;
+    private double turnSpeed;
+    private double targetAngle = 0;
+    private float x;
+    private float y;
+    private double angle;
+
     public Runner(Body body) {
         super(body);
         jumpCount = 0;
@@ -41,15 +48,29 @@ public class Runner extends GameActor {
         hitTexture = AssetsManager.getTextureRegion(Constants.RUNNER_HIT_ASSETS_ID);
         jumpSound = AudioUtils.getInstance().getJumpSound();
         hitSound = AudioUtils.getInstance().getHitSound();
+
+        speed = 10;
+        angle = 0;
+        turnSpeed = 0.07;
+
+
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        float x = screenRectangle.x - (screenRectangle.width * 0.1f);
-        float y = screenRectangle.y;
+//        float x = screenRectangle.x - (screenRectangle.width * 0.1f);
+//        float y = screenRectangle.y;
         float width = screenRectangle.width * 1.2f;
+
+
+        angle = targetAngle;
+        double dx = speed * Math.cos(angle);
+        double dy = speed * Math.sin(angle);
+        x += dx;
+        y += dy;
+
 
         if (dodging) {
             batch.draw(dodgingTexture, x, y + screenRectangle.height / 4, width, screenRectangle.height * 3 / 4);
@@ -66,6 +87,21 @@ public class Runner extends GameActor {
             }
             batch.draw((TextureRegion) runningAnimation.getKeyFrame(stateTime, true), x, y, width, screenRectangle.height);
         }
+    }
+
+    public void setNewHeading(double targetX, double targetY) {
+        Gdx.app.log("Target X"," Main  =>"+targetX+" Little => "+x);
+        Gdx.app.log("Target Y"," Main  =>"+targetY+" Little => "+y);
+        // get vector between current position and target point
+        double dx = targetX - x;
+        double dy = targetY - y;
+        // find angle between that vector and the positive (right) horizontal axis
+        // use atan2 so quadrants are handled correctly
+        setTargetAngle(Math.atan2(dy, dx));
+    }
+
+    private void setTargetAngle(double targetAngle) {
+        this.targetAngle = targetAngle;
     }
 
     @Override

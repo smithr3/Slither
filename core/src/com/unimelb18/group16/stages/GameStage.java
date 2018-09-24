@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -13,13 +12,12 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.unimelb18.group16.actors.Background;
 import com.unimelb18.group16.actors.Enemy;
 import com.unimelb18.group16.actors.Ground;
 import com.unimelb18.group16.actors.Runner;
 import com.unimelb18.group16.actors.Score;
+import com.unimelb18.group16.actors.Snake;
 import com.unimelb18.group16.actors.menu.AboutButton;
 import com.unimelb18.group16.actors.menu.AboutLabel;
 import com.unimelb18.group16.actors.menu.AchievementsButton;
@@ -49,6 +47,7 @@ public class GameStage extends Stage implements ContactListener {
     private World world;
     private Ground ground;
     private Runner runner;
+    private Snake snake;
 
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
@@ -72,18 +71,22 @@ public class GameStage extends Stage implements ContactListener {
     private float totalTimePassed;
     private boolean tutorialShown;
 
+
     private Vector3 touchPoint;
 
     public GameStage() {
-        super(new ScalingViewport(Scaling.stretch, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
-                new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT)));
+//        super(new ScalingViewport(Scaling.stretch, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
+//                new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT)));
         setUpCamera();
         setUpStageBase();
         setUpGameLabel();
         setUpMainMenu();
+
         setUpTouchControlAreas();
         Gdx.input.setInputProcessor(this);
         AudioUtils.getInstance().init();
+
+
         onGameOver();
     }
 
@@ -96,6 +99,19 @@ public class GameStage extends Stage implements ContactListener {
         Rectangle gameLabelBounds = new Rectangle(0, getCamera().viewportHeight * 7 / 8,
                 getCamera().viewportWidth, getCamera().viewportHeight / 4);
         addActor(new GameLabel(gameLabelBounds));
+    }
+
+    private void setUpSnakePlay() {
+        Rectangle snakePlayBounds = new Rectangle(getCamera().viewportWidth / 2, getCamera().viewportHeight / 2,
+                getCamera().viewportWidth, getCamera().viewportHeight / 4);
+
+        snake = new Snake(snakePlayBounds);
+
+        addActor(snake);
+
+        for (int i = 0; i < 10; i++) {
+            addActor(snake.snakeBodies[i]);
+        }
     }
 
     private void setUpAboutText() {
@@ -158,17 +174,17 @@ public class GameStage extends Stage implements ContactListener {
     }
 
     private void setUpStart() {
-        Rectangle startButtonBounds = new Rectangle(getCamera().viewportWidth * 3 / 16,
-                getCamera().viewportHeight / 4, getCamera().viewportWidth / 4,
-                getCamera().viewportWidth / 4);
+        Rectangle startButtonBounds = new Rectangle(getCamera().viewportWidth * 6 / 16,
+                getCamera().viewportHeight / 2, getCamera().viewportWidth / 3,
+                getCamera().viewportWidth / 10);
         startButton = new StartButton(startButtonBounds, new GameStartButtonListener());
         addActor(startButton);
     }
 
     private void setUpLeaderboard() {
-        Rectangle leaderboardButtonBounds = new Rectangle(getCamera().viewportWidth * 9 / 16,
-                getCamera().viewportHeight / 4, getCamera().viewportWidth / 4,
-                getCamera().viewportWidth / 4);
+        Rectangle leaderboardButtonBounds = new Rectangle(getCamera().viewportWidth * 6 / 16,
+                getCamera().viewportHeight / 4, getCamera().viewportWidth / 3,
+                getCamera().viewportWidth / 10);
         leaderboardButton = new LeaderboardButton(leaderboardButtonBounds,
                 new GameLeaderboardButtonListener());
         addActor(leaderboardButton);
@@ -183,8 +199,8 @@ public class GameStage extends Stage implements ContactListener {
     }
 
     private void setUpChangeSkin() {
-        Rectangle changeSkinButtonBounds = new Rectangle(getCamera().viewportWidth * 23 / 25,
-                getCamera().viewportHeight * 13 / 20, getCamera().viewportHeight / 10,
+        Rectangle changeSkinButtonBounds = new Rectangle(getCamera().viewportWidth / 64,
+                getCamera().viewportHeight * 6 / 20, getCamera().viewportHeight / 10,
                 getCamera().viewportHeight / 10);
         changeSkinButton = new ChangeSkinButton(changeSkinButtonBounds, new GameChangeSkinButtonListener());
         addActor(changeSkinButton);
@@ -211,7 +227,7 @@ public class GameStage extends Stage implements ContactListener {
         world = WorldUtils.createWorld();
         world.setContactListener(this);
         setUpBackground();
-        setUpGround();
+        //  setUpGround();
     }
 
     private void setUpBackground() {
@@ -224,9 +240,12 @@ public class GameStage extends Stage implements ContactListener {
     }
 
     private void setUpCharacters() {
-        setUpRunner();
+
+        setUpSnakePlay();
+
+        //setUpRunner();
         setUpPauseLabel();
-        createEnemy();
+        // createEnemy();
     }
 
     private void setUpRunner() {
@@ -330,6 +349,21 @@ public class GameStage extends Stage implements ContactListener {
         addActor(enemy);
     }
 
+    public boolean touchDragged(int x, int y, int pointer) {
+
+
+        translateScreenToWorldCoordinates(x, y);
+
+        if (GameManager.getInstance().getGameState() != GameState.RUNNING) {
+            return super.touchDragged(x, y, pointer);
+        }
+
+     //   runner.setNewHeading(x, y);
+        snake.setNewHeading(x, y);
+
+        return super.touchDragged(x, y, pointer);
+    }
+
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
 
@@ -345,11 +379,15 @@ public class GameStage extends Stage implements ContactListener {
             return super.touchDown(x, y, pointer, button);
         }
 
-        if (rightSideTouched(touchPoint.x, touchPoint.y)) {
-            runner.jump();
-        } else if (leftSideTouched(touchPoint.x, touchPoint.y)) {
-            runner.dodge();
-        }
+     //   runner.setNewHeading(x, y);
+        snake.setNewHeading(x, y);
+
+
+//        if (rightSideTouched(touchPoint.x, touchPoint.y)) {
+//            runner.jump();
+//        } else if (leftSideTouched(touchPoint.x, touchPoint.y)) {
+//            runner.dodge();
+//        }
 
         return super.touchDown(x, y, pointer, button);
     }
@@ -361,9 +399,12 @@ public class GameStage extends Stage implements ContactListener {
             return super.touchUp(screenX, screenY, pointer, button);
         }
 
-        if (runner.isDodging()) {
-            runner.stopDodge();
-        }
+        // runner.setNewHeading(screenX, screenY);
+
+
+//        if (runner.isDodging()) {
+//            runner.stopDodge();
+//        }
 
         return super.touchUp(screenX, screenY, pointer, button);
     }
@@ -443,7 +484,7 @@ public class GameStage extends Stage implements ContactListener {
             String difficultyName = "DIFFICULTY_" + nextDifficulty;
             GameManager.getInstance().setDifficulty(Difficulty.valueOf(difficultyName));
 
-            runner.onDifficultyChange(GameManager.getInstance().getDifficulty());
+           // runner.onDifficultyChange(GameManager.getInstance().getDifficulty());
             score.setMultiplier(GameManager.getInstance().getDifficulty().getScoreMultiplier());
 
             displayAd();

@@ -45,6 +45,9 @@ public class AssetsManager {
         texturesMap.put(Constants.BACKGROUND_ASSETS_ID,
                 new TextureRegion(new Texture(Gdx.files.internal(Constants.BACKGROUND_IMAGE_PATH))));
 
+        texturesMap.put(Constants.CHANGE_SKIN_ASSETS_ID,
+                new TextureRegion(new Texture(Gdx.files.internal(Constants.CHANGE_SKIN_IMAGE_PATH))));
+
         // Ground
         texturesMap.put(Constants.GROUND_ASSETS_ID,
                 new TextureRegion(new Texture(Gdx.files.internal(Constants.GROUND_IMAGE_PATH))));
