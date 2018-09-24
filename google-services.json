@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "62377380988",
+    "firebase_url": "https://unimelb-53786.firebaseio.com",
+    "project_id": "unimelb-53786",
+    "storage_bucket": "unimelb-53786.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62377380988:android:782e242e2f57fe2e",
+        "android_client_info": {
+          "package_name": "com.unimelb18.group16"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62377380988-ghoejc9f44mca2jm0j9m8c6eu0qmblev.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unimelb18.group16",
+            "certificate_hash": "1b931e6c1026df098b80563b9a36fa5d8d2a97a0"
+          }
+        },
+        {
+          "client_id": "62377380988-iu06fcd0kgul7fqis9ii1jc1tvcgl7fi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQJENAddvQ0ntexJT-A1oTqJhPqFsiCWM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62377380988-iu06fcd0kgul7fqis9ii1jc1tvcgl7fi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
