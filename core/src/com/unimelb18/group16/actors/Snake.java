@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-
+import com.unimelb18.group16.utils.Constants;
 
 
 public class Snake extends Actor {
@@ -77,7 +77,7 @@ public class Snake extends Actor {
             }
         }
 
-        batch.draw(imgHead, 0, 0);
+        batch.draw(imgHead, x, Constants.APP_HEIGHT - y);
     }
 
     public void setNewHeading(double targetX, double targetY) {

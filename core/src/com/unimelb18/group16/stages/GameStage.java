@@ -334,19 +334,12 @@ public class GameStage extends Stage implements ContactListener {
     }
 
     private void update(Body body) {
-        if (!BodyUtils.bodyInBounds(body)) {
-            if (BodyUtils.bodyIsEnemy(body) && !runner.isHit()) {
-                createEnemy();
-            }
-            world.destroyBody(body);
-        }
-    }
-
-    private void createEnemy() {
-        Enemy enemy = new Enemy(WorldUtils.createEnemy(world));
-        enemy.getUserData().setLinearVelocity(
-                GameManager.getInstance().getDifficulty().getEnemyLinearVelocity());
-        addActor(enemy);
+//        if (!BodyUtils.bodyInBounds(body)) {
+//            if (BodyUtils.bodyIsEnemy(body) && !runner.isHit()) {
+//                createEnemy();
+//            }
+//            world.destroyBody(body);
+//        }
     }
 
     public boolean touchDragged(int x, int y, int pointer) {
