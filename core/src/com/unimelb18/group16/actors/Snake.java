@@ -1,9 +1,12 @@
 package com.unimelb18.group16.actors;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+
+
 
 public class Snake extends Actor {
 
@@ -34,7 +37,7 @@ public class Snake extends Actor {
         x = bounds.getX() / 2;
         y = bounds.getY() / 2;
 
-        speed = 10;
+        speed = 7;
         angle = 0;
         turnSpeed = 0.07;
 
@@ -50,6 +53,7 @@ public class Snake extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        // todo this draw actually has update code in it
         super.draw(batch, parentAlpha);
 
         angle = targetAngle; // todo remove when turn speed implemented correctly
@@ -60,15 +64,20 @@ public class Snake extends Actor {
         x += dx;
         y += dy;
 
+        // update snake body, by moving each segment towards the one in front
         for (int i = 0; i < 10; i++) {
             if (i == 0) {
                 snakeBodies[i].moveTowards(x, y, speed);
             } else {
-                snakeBodies[i].moveTowards(snakeBodies[i-1].getX(), snakeBodies[i-1].getY(), speed);
+                snakeBodies[i].moveTowards(
+                        snakeBodies[i-1].getX(),
+                        snakeBodies[i-1].getY(),
+                        speed
+                );
             }
         }
 
-        batch.draw(imgHead, x, y);
+        batch.draw(imgHead, 0, 0);
     }
 
     public void setNewHeading(double targetX, double targetY) {
@@ -80,6 +89,14 @@ public class Snake extends Actor {
         setTargetAngle(Math.atan2(dy, dx));
 
 
+    }
+
+    public double signedDifference(double a, double b) {
+        // difference between two angles in radians
+        // a is src, b is target
+        double diff = a - b;
+        diff = ( (diff + Math.PI) % 2*Math.PI ) - Math.PI;
+        return diff;
     }
 
     private void setTargetAngle(double targetAngle) {

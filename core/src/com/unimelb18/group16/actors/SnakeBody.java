@@ -4,21 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.unimelb18.group16.utils.Constants;
 
 public class SnakeBody extends Actor {
     public Texture imgBody;
 
     private Rectangle bounds;
-
-    @Override
-    public float getX() {
-        return x;
-    }
-
-    @Override
-    public float getY() {
-        return y;
-    }
 
     private float x;
     private float y;
@@ -52,7 +43,19 @@ public class SnakeBody extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(imgBody, x, y);
+        // need screen_height - y because game coords are y down (ie. touch input), but screen is y up
+        //https://github.com/libgdx/libgdx/wiki/Coordinate-systems
+        batch.draw(imgBody, x, Constants.APP_HEIGHT - y);
+    }
+
+    @Override
+    public float getX() {
+        return x;
+    }
+
+    @Override
+    public float getY() {
+        return y;
     }
 
 }
