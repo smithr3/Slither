@@ -1,5 +1,6 @@
 package mobile.group16.slither;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends Activity {
 
     private Button buttonPlay;
+
+    //code added:
+    private ImageButton buttonSettingPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +26,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //getting the button
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
 
-        //adding a click listener
-        buttonPlay.setOnClickListener(this);
+        //code added:
+        buttonSettingPic = (ImageButton) findViewById(R.id.buttonSettingPic);
+
+
+        //go to settings menu once pressed
+        buttonSettingPic.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //go to games once pressed
+        buttonPlay.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this,GameActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
-
-    @Override
-    public void onClick(View v) {
-
-        //starting game activity
-        startActivity(new Intent(this, GameActivity.class));
-    }
 }
