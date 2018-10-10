@@ -1,21 +1,17 @@
 package mobile.group16.slither;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.RadialGradient;
-import android.graphics.Rect;
 import android.graphics.Shader;
-import android.os.Bundle;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameView extends SurfaceView implements Runnable {
 
@@ -24,6 +20,9 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread gameThread = null;
 
     private Player player;
+    private SimpleAI ai;
+    private ArrayList<Food> food;
+    private ArrayList<Food> eatenFood; // each update this list is emptied and obj removed from food
 
     //These objects will be used for drawing
     private Paint paint;
@@ -35,6 +34,10 @@ public class GameView extends SurfaceView implements Runnable {
     //Class constructor
     public GameView(Context context, int screenX, int screenY) {
         super(context);
+
+        // save screen size
+        Constants.SCREEN_X = screenX;
+        Constants.SCREEN_Y = screenY;
 
         //initializing drawing objects
         surfaceHolder = getHolder();
@@ -53,8 +56,19 @@ public class GameView extends SurfaceView implements Runnable {
         ));
 
         // initialize game objects
-        player = new Player(context, screenX, screenY);
+        // todo move context and screen into Constants/Globals?
+        player = new Player(context);
+        ai = new SimpleAI(context);
+        food = new ArrayList<Food>();
+        eatenFood = new ArrayList<Food>();
+        for (int i=0; i<Constants.FOOD; i++) {
+            food.add(new Food(context, randomInt(1, 3)));
+        }
+    }
 
+    private int randomInt(int min, int max) {
+        // todo move this code somewhere global, SimpleAI also uses it
+        return ThreadLocalRandom.current().nextInt(min, max+1);
     }
 
     @Override
@@ -68,17 +82,39 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update() {
         player.update();
+        ai.update();
+
+        // collisions between food and snakes
+        // todo clean up or fatten rects, mustn't be positioned nicely as hard to eat food
+        for (Food f: food) {
+            if (player.snake.getHeadRect().contains(f.getX(), f.getY())
+                    && f.notEaten()) {
+                player.snake.grow(f.getSize());
+                f.eat();
+                eatenFood.add(f);
+            }
+        }
+
+        // purge eaten food
+        for (Food f: eatenFood) {
+            food.remove(f);
+            // todo create new food to replace, probably just move food
+        }
+        eatenFood.clear();
     }
 
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
-
             canvas = surfaceHolder.lockCanvas();
+
             canvas.drawColor(Color.BLACK);
 
-            //Drawing the player
             // todo refactor paint into objects that actually use it
             player.draw(canvas, paint);
+            ai.draw(canvas, paint);
+            for (Food f: food) {
+                f.draw(canvas, paint);
+            }
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }

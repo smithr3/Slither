@@ -9,6 +9,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
 
+import java.util.ArrayList;
+
 public class Snake {
     private final int MIN_SPEED;
     private final int MAX_SPEED;
@@ -25,7 +27,7 @@ public class Snake {
 
     private int maxY;
     private int minY;
-    private Rect collisionRect;
+    private Rect headRect;
 
     private int height;
     private int width;
@@ -35,20 +37,24 @@ public class Snake {
     private int tailRadius;
 
     private Bitmap bitmap;
+    private Context context;
 
     private int nSegments;
-    private SnakeSegment[] snakeBody;
-    private double tailLength; // separation ratio, not distance
+    private ArrayList<SnakeSegment> snakeBody;
+    private double tailSeperation; // separation ratio, not distance
 
-    public Snake(Context context, int screenX, int screenY) {
+    public Snake(Context context) {
+        this.context = context;
         MIN_SPEED = 1;
         MAX_SPEED = 20;
 
-        x = screenX/2;
-        y = screenY/2;
+        x = Constants.SCREEN_X/2;
+        y = Constants.SCREEN_Y/2;
         speed = 10;
         angle = 0;
         turnSpeed = 0.07;
+
+        headRadius = 30;
 
         // UNUSED
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.worm_eyes);
@@ -56,26 +62,24 @@ public class Snake {
         width = bitmap.getWidth();
         matrix = new Matrix();
 
-        maxY = screenY - bitmap.getHeight();
+        maxY = Constants.SCREEN_Y - headRadius;
         minY = 0;
 
-//        collisionRect = new Rect((int) x, y, bitmap.getWidth(), bitmap.getHeight());
 
         boosting = false;
 
-        headRadius = 30;
-        tailRadius = 24;
+        headRect = new Rect((int) x, (int) y, headRadius, headRadius);
 
         // create snake body
         nSegments = 15;
-        tailLength = 3;
-        snakeBody = new SnakeSegment[nSegments];
+        tailSeperation = 3;
+        snakeBody = new ArrayList<SnakeSegment>();
         for (int i = 0; i< nSegments; i++) {
-            snakeBody[i] = new SnakeSegment(
+            snakeBody.add(new SnakeSegment(
                     context,
                     x, y,
-                    (int) (headRadius-i*((double)(headRadius-tailRadius)/nSegments))
-            );
+                    headRadius
+            ));
         }
     }
 
@@ -101,26 +105,42 @@ public class Snake {
         // update snake body, by moving each segment towards the one in front
         for (int i = 0; i< nSegments; i++) {
             if (i==0) {
-                snakeBody[i].moveTowards(x, y, tailLength);
+                snakeBody.get(i).moveTowards(x, y, tailSeperation);
             } else {
-                snakeBody[i].moveTowards(
-                        snakeBody[i-1].getX(),
-                        snakeBody[i-1].getY(),
-                        tailLength
+                snakeBody.get(i).moveTowards(
+                        snakeBody.get(i-1).getX(),
+                        snakeBody.get(i-1).getY(),
+                        tailSeperation
                 );
             }
         }
 
-        //adding top, left, bottom and right to the rect object
-//        collisionRect.left = x;
-//        collisionRect.top = y;
-//        collisionRect.right = x + bitmap.getWidth();
-//        collisionRect.bottom = y + bitmap.getHeight();
+        //update collision rect
+        headRect.left = (int)x;
+        headRect.top = (int)y;
+        headRect.right = (int)(x + headRadius);
+        headRect.bottom = (int)(y + headRadius);
+    }
+
+    public void grow(int size) {
+        for (int i=0; i<size; i++) {
+            addSegment();
+        }
+    }
+
+    public void addSegment() {
+        int i = nSegments-1;
+        snakeBody.add(new SnakeSegment(
+                context,
+                snakeBody.get(i-1).getX(), snakeBody.get(i-1).getY(),
+                headRadius
+        ));
+        nSegments ++;
     }
 
     public void draw(Canvas canvas, Paint paint) {
         for (int i = 0; i< nSegments; i++) {
-            snakeBody[i].draw(canvas, paint);
+            snakeBody.get(i).draw(canvas, paint);
         }
         // snake head
         paint.setColor(Color.BLUE);
@@ -152,8 +172,8 @@ public class Snake {
         boosting = false;
     }
 
-    public Rect getCollisionRect() {
-        return collisionRect;
+    public Rect getHeadRect() {
+        return headRect;
     }
 
     public Bitmap getBitmap() {

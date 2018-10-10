@@ -26,18 +26,18 @@ public class MainActivity extends Activity {
         //getting the button
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
 
-        //code added:
-        buttonSettingPic = (ImageButton) findViewById(R.id.buttonSettingPic);
+        // can't find buttonSettingPic
+//        buttonSettingPic = (ImageButton) findViewById(R.id.buttonSettingPic);
 
 
         //go to settings menu once pressed
-        buttonSettingPic.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
-                startActivity(intent);
-            }
-        });
+//        buttonSettingPic.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         //go to games once pressed
         buttonPlay.setOnClickListener(new View.OnClickListener(){
