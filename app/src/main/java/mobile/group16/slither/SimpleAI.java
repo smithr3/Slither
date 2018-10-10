@@ -13,7 +13,7 @@ public class SimpleAI {
     private int screenY;
 
     public SimpleAI(Context context) {
-        snake = new Snake(context, Color.BLUE);
+        snake = new Snake(null, context, Color.BLUE);
         newHeading();
     }
 

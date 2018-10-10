@@ -21,7 +21,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Player player;
     private ArrayList<SimpleAI> allAI;
-    private ArrayList<Food> food;
+    protected ArrayList<Food> food;
     private ArrayList<Food> eatenFood; // each update this list is emptied and obj removed from food
 
     //These objects will be used for drawing
@@ -57,7 +57,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         // initialize game objects
         // todo move context and screen into Constants/Globals?
-        player = new Player(context);
+        player = new Player(this, context);
 
         allAI = new ArrayList<SimpleAI>();
         for (int i=0; i<Constants.AI; i++) {
@@ -167,11 +167,10 @@ public class GameView extends SurfaceView implements Runnable {
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
                 // finger off screen
-                //player.stopBoosting();
+                player.stopBoosting();
                 break;
             case MotionEvent.ACTION_DOWN:
                 // finger touch screen
-                //player.setBoosting();
                 player.handleTouchInput(motionEvent);
                 break;
             case MotionEvent.ACTION_MOVE:

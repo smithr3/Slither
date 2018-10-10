@@ -23,6 +23,12 @@ public class Food {
         y = randomInt(0, Constants.SCREEN_Y);
     }
 
+    public Food(Context context, int x, int y) {
+        this.size = 1;
+        this.x = x;
+        this.y = y;
+    }
+
     public void update() {
         // todo make largest food move around slowly
     }

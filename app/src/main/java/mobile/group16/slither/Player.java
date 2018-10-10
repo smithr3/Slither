@@ -13,12 +13,17 @@ import android.view.MotionEvent;
 public class Player {
     private Snake snake;
 
-    public Player(Context context) {
-        snake = new Snake(context, Color.GREEN);
+    private int doubleTapTimer;
+    private GameView g;
+
+    public Player(GameView g, Context context) {
+        this.g = g;
+        snake = new Snake(g, context, Color.GREEN);
     }
 
     public void update() {
-         snake.update();
+        doubleTapTimer++;
+        snake.update();
     }
 
     public void draw(Canvas canvas, Paint paint) {
@@ -30,6 +35,21 @@ public class Player {
                 motionEvent.getX(),
                 motionEvent.getY()
         );
+
+        if (doubleTapTimer > 60) {
+            // todo actual double tap, not just holding down mouse for 300 consective ticks
+            startBoosting();
+            doubleTapTimer = 0;
+        }
+    }
+
+    public void startBoosting() {
+        snake.setBoosting();
+    }
+
+    public void stopBoosting() {
+        snake.stopBoosting();
+        doubleTapTimer = 0;
     }
 
     public Snake getSnake() {

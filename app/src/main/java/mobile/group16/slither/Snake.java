@@ -36,15 +36,19 @@ public class Snake {
     private int headRadius;
     private int tailRadius;
 
+    private int shrinkTimer = 0;
+
     private int color;
     private Bitmap bitmap;
     private Context context;
+    private GameView g;
 
     private int nSegments;
     private ArrayList<SnakeSegment> snakeBody;
     private double tailSeperation; // separation ratio, not distance
 
-    public Snake(Context context, int color) {
+    public Snake(GameView g, Context context, int color) {
+        this.g = g;
         this.color = color;
         this.context = context;
         MIN_SPEED = 1;
@@ -66,7 +70,6 @@ public class Snake {
 
         maxY = Constants.SCREEN_Y - headRadius;
         minY = 0;
-
 
         boosting = false;
 
@@ -101,20 +104,41 @@ public class Snake {
         // no scaling used for FPS yet
         double dx = speed*Math.cos(angle);
         double dy = speed*Math.sin(angle);
+        double scaleTail = 1;
+        if (boosting) {
+            dx*=Constants.BOOST_MULTIPLIER;
+            dy*=Constants.BOOST_MULTIPLIER;
+            scaleTail = 1.5;
+        } else {
+            scaleTail = 1;
+        }
         x += dx;
         y += dy;
 
         // update snake body, by moving each segment towards the one in front
         for (int i = 0; i< nSegments; i++) {
             if (i==0) {
-                snakeBody.get(i).moveTowards(x, y, tailSeperation);
+                snakeBody.get(i).moveTowards(x, y, tailSeperation/scaleTail);
             } else {
                 snakeBody.get(i).moveTowards(
                         snakeBody.get(i-1).getX(),
                         snakeBody.get(i-1).getY(),
-                        tailSeperation
+                        tailSeperation/scaleTail
                 );
             }
+        }
+
+        // shrink if boosting and create a food trail
+        shrinkTimer++;
+        if (boosting && shrinkTimer > 10 && nSegments > 10) {
+            shrinkTimer = 0;
+            g.food.add(new Food(
+                    context,
+                    (int) snakeBody.get(nSegments-1).getX(),
+                    (int) snakeBody.get(nSegments-1).getY()
+            ));
+            snakeBody.remove(nSegments-1);
+            nSegments--;
         }
 
         //update collision rect
@@ -145,7 +169,11 @@ public class Snake {
             snakeBody.get(i).draw(canvas, paint);
         }
         // snake head
-        paint.setColor(this.color);
+        if (boosting) {
+            paint.setColor(Color.WHITE);
+        } else {
+            paint.setColor(this.color);
+        }
         canvas.drawCircle((int)x, (int)y, headRadius, paint);
     }
 
