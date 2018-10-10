@@ -5,4 +5,5 @@ public class Constants {
     public static int SCREEN_Y = 0;
 
     public static final int FOOD = 50;
+    public static final int AI = 5;
 }

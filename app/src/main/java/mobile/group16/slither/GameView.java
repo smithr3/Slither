@@ -20,7 +20,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread gameThread = null;
 
     private Player player;
-    private SimpleAI ai;
+    private ArrayList<SimpleAI> allAI;
     private ArrayList<Food> food;
     private ArrayList<Food> eatenFood; // each update this list is emptied and obj removed from food
 
@@ -58,7 +58,12 @@ public class GameView extends SurfaceView implements Runnable {
         // initialize game objects
         // todo move context and screen into Constants/Globals?
         player = new Player(context);
-        ai = new SimpleAI(context);
+
+        allAI = new ArrayList<SimpleAI>();
+        for (int i=0; i<Constants.AI; i++) {
+            allAI.add(new SimpleAI(context));
+        }
+
         food = new ArrayList<Food>();
         eatenFood = new ArrayList<Food>();
         for (int i=0; i<Constants.FOOD; i++) {
@@ -82,16 +87,28 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update() {
         player.update();
-        ai.update();
+        for (SimpleAI ai: allAI) {
+            ai.update();
+        }
+
+        // get all snakes into single array
+        // todo construct this once at a more effecient time
+        ArrayList<Snake> snakeHeads = new ArrayList<Snake>();
+        snakeHeads.add(player.getSnake());
+        for (SimpleAI ai: allAI) {
+            snakeHeads.add(ai.getSnake());
+        }
 
         // collisions between food and snakes
         // todo clean up or fatten rects, mustn't be positioned nicely as hard to eat food
         for (Food f: food) {
-            if (player.snake.getHeadRect().contains(f.getX(), f.getY())
-                    && f.notEaten()) {
-                player.snake.grow(f.getSize());
-                f.eat();
-                eatenFood.add(f);
+            for (Snake snake: snakeHeads) {
+                if (snake.getHeadRect().contains(f.getX(), f.getY())
+                        && f.notEaten()) {
+                    snake.grow(f.getSize());
+                    f.eat();
+                    eatenFood.add(f);
+                }
             }
         }
 
@@ -111,7 +128,9 @@ public class GameView extends SurfaceView implements Runnable {
 
             // todo refactor paint into objects that actually use it
             player.draw(canvas, paint);
-            ai.draw(canvas, paint);
+            for (SimpleAI ai: allAI) {
+                ai.draw(canvas, paint);
+            }
             for (Food f: food) {
                 f.draw(canvas, paint);
             }

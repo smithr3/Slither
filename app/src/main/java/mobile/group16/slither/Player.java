@@ -11,10 +11,10 @@ import android.graphics.Color;
 import android.view.MotionEvent;
 
 public class Player {
-    protected Snake snake;
+    private Snake snake;
 
     public Player(Context context) {
-        snake = new Snake(context);
+        snake = new Snake(context, Color.GREEN);
     }
 
     public void update() {
@@ -30,5 +30,9 @@ public class Player {
                 motionEvent.getX(),
                 motionEvent.getY()
         );
+    }
+
+    public Snake getSnake() {
+        return snake;
     }
 }

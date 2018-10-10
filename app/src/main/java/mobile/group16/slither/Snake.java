@@ -36,6 +36,7 @@ public class Snake {
     private int headRadius;
     private int tailRadius;
 
+    private int color;
     private Bitmap bitmap;
     private Context context;
 
@@ -43,7 +44,8 @@ public class Snake {
     private ArrayList<SnakeSegment> snakeBody;
     private double tailSeperation; // separation ratio, not distance
 
-    public Snake(Context context) {
+    public Snake(Context context, int color) {
+        this.color = color;
         this.context = context;
         MIN_SPEED = 1;
         MAX_SPEED = 20;
@@ -143,7 +145,7 @@ public class Snake {
             snakeBody.get(i).draw(canvas, paint);
         }
         // snake head
-        paint.setColor(Color.BLUE);
+        paint.setColor(this.color);
         canvas.drawCircle((int)x, (int)y, headRadius, paint);
     }
 
