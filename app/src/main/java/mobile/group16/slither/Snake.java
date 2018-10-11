@@ -9,6 +9,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Color;
 
+import java.util.ArrayList;
+
 public class Snake {
     private final int MIN_SPEED;
     private final int MAX_SPEED;
@@ -25,30 +27,39 @@ public class Snake {
 
     private int maxY;
     private int minY;
-    private Rect collisionRect;
+    private Rect headRect;
 
     private int height;
     private int width;
     private Matrix matrix; // for drawBitmap()
 
-    private int headRadius;
-    private int tailRadius;
+    private double headRadius;
 
+    private int shrinkTimer = 0;
+
+    private int color;
     private Bitmap bitmap;
+    private Context context;
+    private GameView g;
 
     private int nSegments;
-    private SnakeSegment[] snakeBody;
-    private double tailLength; // separation ratio, not distance
+    private ArrayList<SnakeSegment> snakeBody;
+    private double tailSeperation; // separation ratio, not distance
 
-    public Snake(Context context, int screenX, int screenY) {
+    public Snake(GameView g, Context context, int color) {
+        this.g = g;
+        this.color = color;
+        this.context = context;
         MIN_SPEED = 1;
         MAX_SPEED = 20;
 
-        x = screenX/2;
-        y = screenY/2;
+        x = Constants.SCREEN_X/2;
+        y = Constants.SCREEN_Y/2;
         speed = 10;
         angle = 0;
         turnSpeed = 0.07;
+
+        headRadius = 30;
 
         // UNUSED
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.worm_eyes);
@@ -56,26 +67,23 @@ public class Snake {
         width = bitmap.getWidth();
         matrix = new Matrix();
 
-        maxY = screenY - bitmap.getHeight();
+        maxY = Constants.SCREEN_Y - (int)headRadius;
         minY = 0;
-
-//        collisionRect = new Rect((int) x, y, bitmap.getWidth(), bitmap.getHeight());
 
         boosting = false;
 
-        headRadius = 30;
-        tailRadius = 24;
+        headRect = new Rect((int) x, (int) y, (int)headRadius, (int)headRadius);
 
         // create snake body
         nSegments = 15;
-        tailLength = 3;
-        snakeBody = new SnakeSegment[nSegments];
+        tailSeperation = 3;
+        snakeBody = new ArrayList<SnakeSegment>();
         for (int i = 0; i< nSegments; i++) {
-            snakeBody[i] = new SnakeSegment(
+            snakeBody.add(new SnakeSegment(
                     context,
                     x, y,
-                    (int) (headRadius-i*((double)(headRadius-tailRadius)/nSegments))
-            );
+                    (int)headRadius
+            ));
         }
     }
 
@@ -95,36 +103,81 @@ public class Snake {
         // no scaling used for FPS yet
         double dx = speed*Math.cos(angle);
         double dy = speed*Math.sin(angle);
+        double scaleTail = 1;
+        if (boosting) {
+            dx*=Constants.BOOST_MULTIPLIER;
+            dy*=Constants.BOOST_MULTIPLIER;
+            scaleTail = 1.5;
+        } else {
+            scaleTail = 1;
+        }
         x += dx;
         y += dy;
 
         // update snake body, by moving each segment towards the one in front
         for (int i = 0; i< nSegments; i++) {
             if (i==0) {
-                snakeBody[i].moveTowards(x, y, tailLength);
+                snakeBody.get(i).moveTowards(x, y, tailSeperation/scaleTail);
             } else {
-                snakeBody[i].moveTowards(
-                        snakeBody[i-1].getX(),
-                        snakeBody[i-1].getY(),
-                        tailLength
+                snakeBody.get(i).moveTowards(
+                        snakeBody.get(i-1).getX(),
+                        snakeBody.get(i-1).getY(),
+                        tailSeperation/scaleTail
                 );
             }
         }
 
-        //adding top, left, bottom and right to the rect object
-//        collisionRect.left = x;
-//        collisionRect.top = y;
-//        collisionRect.right = x + bitmap.getWidth();
-//        collisionRect.bottom = y + bitmap.getHeight();
+        // shrink if boosting and create a food trail
+        shrinkTimer++;
+        if (boosting && shrinkTimer > 10 && nSegments > 10) {
+            shrinkTimer = 0;
+            g.food.add(new Food(
+                    context,
+                    (int) snakeBody.get(nSegments-1).getX(),
+                    (int) snakeBody.get(nSegments-1).getY()
+            ));
+            snakeBody.remove(nSegments-1);
+            nSegments--;
+        }
+
+        //update collision rect to match new location
+        headRect.left = (int)x - (int)headRadius/2;
+        headRect.top = (int)y - (int)headRadius/2;
+        headRect.right = (int)(x + (int)headRadius/2);
+        headRect.bottom = (int)(y + (int)headRadius/2);
+    }
+
+    public void grow(int size) {
+        for (int i=0; i<size; i++) {
+            addSegment();
+            headRadius *= Constants.SNAKE_GROWTH;
+            for (SnakeSegment seg: snakeBody) {
+                seg.fatten(Constants.SNAKE_GROWTH);
+            }
+        }
+    }
+
+    public void addSegment() {
+        int i = nSegments-1;
+        snakeBody.add(new SnakeSegment(
+                context,
+                snakeBody.get(i-1).getX(), snakeBody.get(i-1).getY(),
+                (int)headRadius
+        ));
+        nSegments ++;
     }
 
     public void draw(Canvas canvas, Paint paint) {
         for (int i = 0; i< nSegments; i++) {
-            snakeBody[i].draw(canvas, paint);
+            snakeBody.get(i).draw(canvas, paint);
         }
         // snake head
-        paint.setColor(Color.BLUE);
-        canvas.drawCircle((int)x, (int)y, headRadius, paint);
+        if (boosting) {
+            paint.setColor(Color.WHITE);
+        } else {
+            paint.setColor(this.color);
+        }
+        canvas.drawCircle((int)x, (int)y, (int)headRadius, paint);
     }
 
     public void setNewHeading(double targetX, double targetY) {
@@ -152,8 +205,8 @@ public class Snake {
         boosting = false;
     }
 
-    public Rect getCollisionRect() {
-        return collisionRect;
+    public Rect getHeadRect() {
+        return headRect;
     }
 
     public Bitmap getBitmap() {

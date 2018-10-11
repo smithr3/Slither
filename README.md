@@ -1,6 +1,6 @@
 # Slither.io Project
 Mobile Computing - Group 16
-
+Sam added setting menu that can be accessed from the main screen (Changed Main Activity file and now it extend Activites instead)
 ## Ordered To Do
 
 1. Finish basic snake movement
