@@ -19,7 +19,7 @@ public class SnakeSegment {
     private double x;
     private double y;
 
-    private int radius;
+    private float radius;
 
     public SnakeSegment(Context context, double startX, double startY, int radius) {
 //        GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{context.getResources().getColor(R.color.redStartColor), context.getResources().getColor(R.color.redEndColor)});
@@ -51,7 +51,7 @@ public class SnakeSegment {
 
     public void draw(Canvas canvas, Paint paint) {
         paint.setColor(Color.RED);
-        canvas.drawCircle((int)x, (int)y, radius, paint);
+        canvas.drawCircle((int)x, (int)y, (int)radius, paint);
     }
 
     public double getX() {
@@ -60,6 +60,10 @@ public class SnakeSegment {
 
     public double getY() {
         return y;
+    }
+
+    public void fatten(float amount) {
+        radius *= amount;
     }
 
 //    public Drawable getDrawable() {

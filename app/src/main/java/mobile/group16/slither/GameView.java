@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,6 +30,8 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder surfaceHolder;
 
+    private Camera camera;
+
     Paint trailPaint; // todo remove probably
 
     //Class constructor
@@ -42,6 +45,7 @@ public class GameView extends SurfaceView implements Runnable {
         //initializing drawing objects
         surfaceHolder = getHolder();
         paint = new Paint();
+        camera = new Camera(300, 0);
 
         trailPaint = new Paint();
         trailPaint.setColor(Color.BLUE);
@@ -91,6 +95,9 @@ public class GameView extends SurfaceView implements Runnable {
             ai.update();
         }
 
+        camera.setX((float)player.getSnake().getX());
+        camera.setY((float)player.getSnake().getY());
+
         // get all snakes into single array
         // todo construct this once at a more effecient time
         ArrayList<Snake> snakeHeads = new ArrayList<Snake>();
@@ -103,11 +110,13 @@ public class GameView extends SurfaceView implements Runnable {
         // todo clean up or fatten rects, mustn't be positioned nicely as hard to eat food
         for (Food f: food) {
             for (Snake snake: snakeHeads) {
-                if (snake.getHeadRect().contains(f.getX(), f.getY())
-                        && f.notEaten()) {
+                if (snake.getHeadRect().contains(f.getX(), f.getY()) && f.notEaten()) {
                     snake.grow(f.getSize());
                     f.eat();
                     eatenFood.add(f);
+                    if (snake == player.getSnake()) {
+                        camera.zoomOut(f.getSize());
+                    }
                 }
             }
         }
@@ -118,11 +127,20 @@ public class GameView extends SurfaceView implements Runnable {
             // todo create new food to replace, probably just move food
         }
         eatenFood.clear();
+
     }
 
     private void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             canvas = surfaceHolder.lockCanvas();
+
+//            canvas.translate(0, 100f);
+//            canvas.rotate(45);
+            canvas.scale(camera.getScale(), camera.getScale());
+            canvas.translate(
+                    -camera.getX()+Constants.SCREEN_X/camera.getScale()*0.5f,
+                    -camera.getY()+Constants.SCREEN_Y/camera.getScale()*0.5f
+            );
 
             canvas.drawColor(Color.BLACK);
 
@@ -134,6 +152,8 @@ public class GameView extends SurfaceView implements Runnable {
             for (Food f: food) {
                 f.draw(canvas, paint);
             }
+
+
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
@@ -164,6 +184,14 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
+        float x = motionEvent.getX();
+        float y = motionEvent.getY();
+
+//        Log.d("MOTION", String.format("x %d y %d", (int)x, (int)y));
+
+        x = x*camera.getScale() + camera.getX() - Constants.SCREEN_X/2*camera.getScale();
+        y = y*camera.getScale() + camera.getY() - Constants.SCREEN_Y/2*camera.getScale();
+
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
                 // finger off screen
@@ -171,11 +199,11 @@ public class GameView extends SurfaceView implements Runnable {
                 break;
             case MotionEvent.ACTION_DOWN:
                 // finger touch screen
-                player.handleTouchInput(motionEvent);
+                player.handleTouchInput(x, y);
                 break;
             case MotionEvent.ACTION_MOVE:
                 // moving finger on screen
-                player.handleTouchInput(motionEvent);
+                player.handleTouchInput(x, y);
                 break;
         }
         return true;

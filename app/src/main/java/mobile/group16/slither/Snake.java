@@ -33,8 +33,7 @@ public class Snake {
     private int width;
     private Matrix matrix; // for drawBitmap()
 
-    private int headRadius;
-    private int tailRadius;
+    private double headRadius;
 
     private int shrinkTimer = 0;
 
@@ -68,12 +67,12 @@ public class Snake {
         width = bitmap.getWidth();
         matrix = new Matrix();
 
-        maxY = Constants.SCREEN_Y - headRadius;
+        maxY = Constants.SCREEN_Y - (int)headRadius;
         minY = 0;
 
         boosting = false;
 
-        headRect = new Rect((int) x, (int) y, headRadius, headRadius);
+        headRect = new Rect((int) x, (int) y, (int)headRadius, (int)headRadius);
 
         // create snake body
         nSegments = 15;
@@ -83,7 +82,7 @@ public class Snake {
             snakeBody.add(new SnakeSegment(
                     context,
                     x, y,
-                    headRadius
+                    (int)headRadius
             ));
         }
     }
@@ -141,16 +140,20 @@ public class Snake {
             nSegments--;
         }
 
-        //update collision rect
-        headRect.left = (int)x;
-        headRect.top = (int)y;
-        headRect.right = (int)(x + headRadius);
-        headRect.bottom = (int)(y + headRadius);
+        //update collision rect to match new location
+        headRect.left = (int)x - (int)headRadius/2;
+        headRect.top = (int)y - (int)headRadius/2;
+        headRect.right = (int)(x + (int)headRadius/2);
+        headRect.bottom = (int)(y + (int)headRadius/2);
     }
 
     public void grow(int size) {
         for (int i=0; i<size; i++) {
             addSegment();
+            headRadius *= Constants.SNAKE_GROWTH;
+            for (SnakeSegment seg: snakeBody) {
+                seg.fatten(Constants.SNAKE_GROWTH);
+            }
         }
     }
 
@@ -159,7 +162,7 @@ public class Snake {
         snakeBody.add(new SnakeSegment(
                 context,
                 snakeBody.get(i-1).getX(), snakeBody.get(i-1).getY(),
-                headRadius
+                (int)headRadius
         ));
         nSegments ++;
     }
@@ -174,7 +177,7 @@ public class Snake {
         } else {
             paint.setColor(this.color);
         }
-        canvas.drawCircle((int)x, (int)y, headRadius, paint);
+        canvas.drawCircle((int)x, (int)y, (int)headRadius, paint);
     }
 
     public void setNewHeading(double targetX, double targetY) {

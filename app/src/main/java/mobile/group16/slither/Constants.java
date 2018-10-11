@@ -7,4 +7,5 @@ public class Constants {
     public static final int FOOD = 50;
     public static final int AI = 5;
     public static final int BOOST_MULTIPLIER = 2;
+    public static final float SNAKE_GROWTH = 1.01f; // 1%
 }

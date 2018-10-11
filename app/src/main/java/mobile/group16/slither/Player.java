@@ -30,11 +30,9 @@ public class Player {
         snake.draw(canvas, paint);
     }
 
-    public void handleTouchInput(MotionEvent motionEvent) {
-        snake.setNewHeading(
-                motionEvent.getX(),
-                motionEvent.getY()
-        );
+    public void handleTouchInput(float x, float y) {
+        // x/y in game world coords
+        snake.setNewHeading(x, y);
 
         if (doubleTapTimer > 60) {
             // todo actual double tap, not just holding down mouse for 300 consective ticks
