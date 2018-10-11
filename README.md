@@ -1,17 +1,17 @@
 # Slither.io Project
 Mobile Computing - Group 16
-Sam added setting menu that can be accessed from the main screen (Changed Main Activity file and now it extend Activites instead)
+
 ## Ordered To Do
 
-1. Finish basic snake movement
-2. Food and growing
-3. Boosting/pulsating/shortening
-3. Arena boundaries, camera movement and zooming
-4. AI snakes
-5. Collisions and death
-6. 3 Movement controls
+6. 3 Movement controls (and actual double tap for boosting instead)
+4. Snake collision (check headrect.intersection against maybe 33% of an enemy snakes body segments)
+5. Death and spawing food for every body segment
+1. Snake movement - turnspeed still not implemented
+3. Pulsating when eating
+3. Arena boundaries, spawn food in larger space, replace eaten food
 7. Extras - pickups, etc
-8. Multiplayer
+8. Optimise drawing (dirty rects, idk what else)
+8. Pretty up the graphics
 
 ## Random To Do
 
