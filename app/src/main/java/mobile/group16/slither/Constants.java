@@ -8,4 +8,10 @@ public class Constants {
     public static final int AI = 5;
     public static final int BOOST_MULTIPLIER = 2;
     public static final float SNAKE_GROWTH = 1.01f; // 1%
+
+
+    public static final int LeftChangeSkin=1;
+    public static final int RightChangeSkin=2;
+
+    public static final String MY_PREFS_NAME = "MyDataStorage";
 }

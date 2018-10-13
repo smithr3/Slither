@@ -26,9 +26,9 @@
         android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true" >
 
         <ImageButton
-            android:layout_width="wrap_content"
+            android:layout_width="wrap_content" android:id="@+id/changeSkin"
             android:layout_height="wrap_content" android:background="@drawable/change_skin"
-             />
+            />
 
         <TextView
             android:layout_width="wrap_content"

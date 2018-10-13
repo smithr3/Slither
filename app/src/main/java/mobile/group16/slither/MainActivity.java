@@ -9,12 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
 
     private Button buttonPlay;
 
     //code added:
     private ImageButton buttonSettingPic;
+
+    private ImageButton changeSkin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,9 @@ public class MainActivity extends Activity {
 
         //getting the button
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
+        changeSkin = (ImageButton) findViewById(R.id.changeSkin);
+        buttonPlay.setOnClickListener(this);
+        changeSkin.setOnClickListener(this);
 
         // can't find buttonSettingPic
 //        buttonSettingPic = (ImageButton) findViewById(R.id.buttonSettingPic);
@@ -40,14 +45,29 @@ public class MainActivity extends Activity {
 //        });
 
         //go to games once pressed
-        buttonPlay.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(MainActivity.this,GameActivity.class);
-                startActivity(intent);
-            }
-        });
+//        buttonPlay.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                Intent intent = new Intent(MainActivity.this,GameActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId()){
+            case R.id.buttonPlay:
+                startActivity(new Intent(this, GameActivity.class));
+                break;
+            case R.id.changeSkin:
+                startActivity(new Intent(this, ChangeSkinActivity.class));
+                break;
+        }
+
+        //starting game activity
+
+    }
 }
