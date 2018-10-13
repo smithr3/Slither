@@ -17,6 +17,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private ImageButton buttonSettingPic;
 
     private ImageButton changeSkin;
+    private ImageButton ibSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +29,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         //getting the button
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
         changeSkin = (ImageButton) findViewById(R.id.changeSkin);
+        ibSetting = (ImageButton) findViewById(R.id.ibSetting);
         buttonPlay.setOnClickListener(this);
         changeSkin.setOnClickListener(this);
+        ibSetting.setOnClickListener(this);
 
         // can't find buttonSettingPic
 //        buttonSettingPic = (ImageButton) findViewById(R.id.buttonSettingPic);
@@ -64,6 +67,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.changeSkin:
                 startActivity(new Intent(this, ChangeSkinActivity.class));
+                break;
+            case R.id.ibSetting:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
         }
 

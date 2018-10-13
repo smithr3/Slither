@@ -17,7 +17,7 @@
         android:layout_height="wrap_content" android:background="@drawable/sliter_io"/>
 
     <ImageButton
-        android:layout_width="wrap_content"
+        android:layout_width="wrap_content" android:id="@+id/ibSetting"
         android:layout_height="wrap_content" android:background="@drawable/settings"
         android:layout_alignParentRight="true"/>
 
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_above="@+id/buttonScore" android:text="Play Online"
+        android:layout_above="@+id/buttonScore" android:text="Single Player"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -53,7 +53,7 @@
         android:layout_marginTop="10dp"
         android:padding="10dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" android:text="High Score"
+        android:layout_alignParentBottom="true" android:text="Multi Player"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
