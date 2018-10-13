@@ -3,57 +3,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:background="@drawable/sliter_io_background"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:layout_centerInParent="true"
     android:scaleType="centerCrop"
-    android:background="@drawable/sliter_io_background"
     tools:context=".MainActivity">
 
-    <ImageView  android:layout_centerHorizontal="true" android:paddingTop="@dimen/activity_horizontal_margin"
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:background="@drawable/sliter_io"/>
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/sliter_io"
+        android:paddingTop="@dimen/activity_horizontal_margin" />
 
     <ImageButton
-        android:layout_width="wrap_content" android:id="@+id/ibSetting"
-        android:layout_height="wrap_content" android:background="@drawable/settings"
-        android:layout_alignParentRight="true"/>
-
-    <LinearLayout android:orientation="vertical"
+        android:id="@+id/ibSetting"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_alignParentLeft="true" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/settings" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical">
 
         <ImageButton
-            android:layout_width="wrap_content" android:id="@+id/changeSkin"
-            android:layout_height="wrap_content" android:background="@drawable/change_skin"
-            />
+            android:id="@+id/changeSkin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/change_skin" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:textColor="#FFFFFF" android:text="Change Skin"/>
+            android:layout_height="wrap_content"
+            android:text="Change Skin"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
-
+    <Button
+        android:id="@+id/buttonShareSocialMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share" />
 
     <Button
         android:id="@+id/buttonPlay"
-        android:background="@drawable/play_online_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonScore"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/play_online_button"
         android:padding="10dp"
-        android:layout_above="@+id/buttonScore" android:text="Single Player"
-        android:layout_centerHorizontal="true" />
+        android:text="Single Player" />
 
     <Button
         android:id="@+id/buttonScore"
-        android:background="@drawable/high_score"
         android:layout_width="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" android:text="Multi Player"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/high_score"
+        android:padding="10dp"
+        android:text="Multi Player" />
 
 </RelativeLayout>

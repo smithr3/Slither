@@ -3,7 +3,6 @@ package mobile.group16.slither;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +17,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private ImageButton changeSkin;
     private ImageButton ibSetting;
+    private Button buttonShareSocialMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +28,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         //getting the button
         buttonPlay = (Button) findViewById(R.id.buttonPlay);
+        buttonShareSocialMedia = (Button) findViewById(R.id.buttonShareSocialMedia);
         changeSkin = (ImageButton) findViewById(R.id.changeSkin);
         ibSetting = (ImageButton) findViewById(R.id.ibSetting);
+
+
         buttonPlay.setOnClickListener(this);
         changeSkin.setOnClickListener(this);
         ibSetting.setOnClickListener(this);
+        buttonShareSocialMedia.setOnClickListener(this);
 
         // can't find buttonSettingPic
 //        buttonSettingPic = (ImageButton) findViewById(R.id.buttonSettingPic);
@@ -61,7 +65,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.buttonPlay:
                 startActivity(new Intent(this, GameActivity.class));
                 break;
@@ -70,6 +74,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.ibSetting:
                 startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.buttonShareSocialMedia:
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, "I have achieved a high score in game : 2000");
+                startActivity(Intent.createChooser(intent, "Share"));
                 break;
         }
 
