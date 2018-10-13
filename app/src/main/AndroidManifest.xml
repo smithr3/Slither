@@ -19,6 +19,10 @@
         <activity android:name=".GameActivity" />
         <activity android:name=".ChangeSkinActivity" />
         <activity android:name=".SettingsActivity" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1332753988296742~6854006287"/>
     </application>
 
 </manifest>

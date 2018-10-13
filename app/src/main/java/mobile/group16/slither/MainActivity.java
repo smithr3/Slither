@@ -4,13 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private Button buttonPlay;
+    private Button buttonScore;
 
     //code added:
     private ImageButton buttonSettingPic;
@@ -19,6 +26,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private ImageButton ibSetting;
     private Button buttonShareSocialMedia;
 
+    private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,39 +35,39 @@ public class MainActivity extends Activity implements View.OnClickListener {
         //setting the orientation to landscape
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        //getting the button
-        buttonPlay = (Button) findViewById(R.id.buttonPlay);
-        buttonShareSocialMedia = (Button) findViewById(R.id.buttonShareSocialMedia);
-        changeSkin = (ImageButton) findViewById(R.id.changeSkin);
-        ibSetting = (ImageButton) findViewById(R.id.ibSetting);
+        /* getting the button */
+        buttonPlay = findViewById(R.id.buttonPlay);
+        buttonScore = findViewById(R.id.buttonScore);
+        buttonShareSocialMedia = findViewById(R.id.buttonShareSocialMedia);
+        changeSkin = findViewById(R.id.changeSkin);
+        ibSetting = findViewById(R.id.ibSetting);
 
 
         buttonPlay.setOnClickListener(this);
         changeSkin.setOnClickListener(this);
         ibSetting.setOnClickListener(this);
+        buttonScore.setOnClickListener(this);
         buttonShareSocialMedia.setOnClickListener(this);
 
-        // can't find buttonSettingPic
-//        buttonSettingPic = (ImageButton) findViewById(R.id.buttonSettingPic);
+        MobileAds.initialize(this, "ca-app-pub-1332753988296742~6854006287");
+        AdRequest request = new AdRequest.Builder()
+                .addTestDevice("F73318D6444F7D56A4B55176FC08F85B")  // An example device ID
+                .build();
 
+        Log.i("Test Device =>", request.isTestDevice(getApplicationContext()) + "");
 
-        //go to settings menu once pressed
-//        buttonSettingPic.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
-        //go to games once pressed
-//        buttonPlay.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                Intent intent = new Intent(MainActivity.this,GameActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
 
     }
 
@@ -83,6 +92,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 intent.putExtra(Intent.EXTRA_TEXT, "I have achieved a high score in game : 2000");
                 startActivity(Intent.createChooser(intent, "Share"));
                 break;
+            case R.id.buttonScore:
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }
         }
 
         //starting game activity
