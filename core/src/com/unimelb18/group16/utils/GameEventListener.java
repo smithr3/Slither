@@ -52,7 +52,7 @@ public interface GameEventListener {
     /**
      * Shares the game's website
      */
-    public void share();
+    public void share(String myScore);
 
     /**
      * Unlocks an achievement with the given ID

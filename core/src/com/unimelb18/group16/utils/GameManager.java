@@ -120,8 +120,8 @@ public class GameManager implements GameEventListener {
     }
 
     @Override
-    public void share() {
-        gameEventListener.share();
+    public void share(String myScore) {
+        gameEventListener.share(myScore);
     }
 
     @Override

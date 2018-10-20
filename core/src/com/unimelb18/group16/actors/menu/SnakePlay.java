@@ -15,6 +15,8 @@ public class SnakePlay extends Actor {
 
     private Snake theSnake;
 
+
+
     private Vector2 position;
     private Vector2 lastPos;
 

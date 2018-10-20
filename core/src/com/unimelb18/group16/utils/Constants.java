@@ -47,7 +47,7 @@ public class Constants {
     public static final String RUNNER_RUNNING_ASSETS_ID = "change_skin";
     public static final String RUNNER_DODGING_ASSETS_ID = "change_skin";
     public static final String RUNNER_HIT_ASSETS_ID = "change_skin";
-    public static final String RUNNER_JUMPING_ASSETS_ID = "change_skin";
+    public static final String SAVE_BUTTON = "save";
     public static final String RUNNING_SMALL_ENEMY_ASSETS_ID = "change_skin";
     public static final String RUNNING_LONG_ENEMY_ASSETS_ID = "change_skin";
     public static final String RUNNING_BIG_ENEMY_ASSETS_ID = "change_skin";
@@ -98,8 +98,8 @@ public class Constants {
 
     public static final String FONT_NAME = "roboto_bold.ttf";
 
-    public static final String ABOUT_TEXT = "Developed by: @gamestudio24\nPowered by: " +
-            "@libgdx\nGraphics: @kenneywings\nMusic: @kmacleod";
+    public static final String ABOUT_TEXT = "Developed by: Anup Nepal, Robert Smith\nSupport Staff: " +
+            "The Rest of the Guys";
     public static final String SHARE_MESSAGE_PREFIX = "Check out " + GAME_NAME + " %s";
     public static final String SHARE_TITLE = "Share!";
     public static final String PAUSED_LABEL = "Paused";

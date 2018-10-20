@@ -1,7 +1,6 @@
 package com.unimelb18.group16.actors;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.unimelb18.group16.box2d.SnakeUserData;
-import com.unimelb18.group16.utils.SharedData;
 
 import java.util.ArrayList;
 
@@ -25,6 +23,12 @@ public class Snake extends GameActor {
     public float getX() {
         return x;
     }
+
+    public String getSnakeName() {
+        return snakeName;
+    }
+
+    private String snakeName;
 
     @Override
     public void setX(float x) {
@@ -44,6 +48,8 @@ public class Snake extends GameActor {
     private double speed;
     private double angle;
     private double turnSpeed;
+
+    private boolean stopMovement = false;
 
     private double distance;
 
@@ -65,7 +71,6 @@ public class Snake extends GameActor {
 
     Vector2 touch;
     Vector2 dir;
-
 
 
     TextureRegion snakeRegion;
@@ -101,26 +106,29 @@ public class Snake extends GameActor {
 
     ShapeRenderer shapeRenderer;
 
-    public Snake(Body body) {
+    public Snake(Body body, String name, int currentColor) {
         super(body);
         //setWidth(bounds.width);
         // setHeight(bounds.height);
 
+        this.snakeName = name;
         // this.camera=camera;
         position = new Vector2();
         velocity = new Vector2();
         movement = new Vector2();
         touch = new Vector2();
         dir = new Vector2();
+        stopMovement = false;
 
-        String currentSkin = SharedData.getKey("currentSkin");
 
-        if (currentSkin != null && !currentSkin.equals("")) {
-            currentColor = Integer.parseInt(currentSkin);
+        this.currentColor = currentColor;
+
+        if (this.currentColor > 4 || this.currentColor < 0) {
+            this.currentColor = 0;
         }
 
         snakeHead = new Texture("worm_eyes.png");
-        snakeBody = new Texture(snakeColor[currentColor]);
+        snakeBody = new Texture(snakeColor[this.currentColor]);
 
         snakeRegion = new TextureRegion(snakeHead);
         snakeRegion.setRegion(0, 0, snakeHead.getWidth(), snakeHead.getHeight());
@@ -140,9 +148,8 @@ public class Snake extends GameActor {
         shapeRenderer = new ShapeRenderer();
 
 
-
         for (int i = 0; i < 5; i++) {
-            snakeBodies.add(new SnakeBody(x, y, snakeColor[currentColor]));
+            snakeBodies.add(new SnakeBody(x, y, snakeColor[this.currentColor]));
         }
 
         position.set(x, y);
@@ -285,6 +292,10 @@ public class Snake extends GameActor {
 //        setTargetAngle(Math.atan2(dy, dx));
         touch.set(targetX, targetY);
         angleChange = true;
+    }
+
+    public void stopMovement() {
+        stopMovement = true;
     }
 
     public void setCamera(Camera camera) {

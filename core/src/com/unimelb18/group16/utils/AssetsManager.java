@@ -55,7 +55,7 @@ public class AssetsManager {
         textureAtlas = new TextureAtlas(Constants.SPRITES_ATLAS_PATH);
 
         // Runner
-        texturesMap.put(Constants.RUNNER_JUMPING_ASSETS_ID,
+        texturesMap.put(Constants.SAVE_BUTTON,
                 textureAtlas.findRegion(Constants.RUNNER_JUMPING_REGION_NAME));
         texturesMap.put(Constants.RUNNER_DODGING_ASSETS_ID,
                 textureAtlas.findRegion(Constants.RUNNER_DODGING_REGION_NAME));

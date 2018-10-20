@@ -3,66 +3,73 @@ slither.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+save
+  rotate: false
+  xy: 1, 143
+  size: 470, 108
+  orig: 470, 108
+  offset: 0, 0
+  index: -1
 play_ai
   rotate: false
-  xy: 1, 53
+  xy: 1, 91
   size: 186, 50
   orig: 186, 50
   offset: 0, 0
   index: -1
 play_online
   rotate: false
-  xy: 1, 1
+  xy: 473, 201
   size: 182, 50
   orig: 182, 50
   offset: 0, 0
   index: -1
 left_arrow
   rotate: false
-  xy: 189, 15
+  xy: 1, 1
   size: 87, 88
   orig: 87, 88
   offset: 0, 0
   index: -1
 right_arrow
   rotate: false
-  xy: 278, 15
+  xy: 90, 1
   size: 87, 88
   orig: 87, 88
   offset: 0, 0
   index: -1
 about
   rotate: false
-  xy: 367, 23
+  xy: 473, 119
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 ads
   rotate: false
-  xy: 449, 23
-  size: 80, 80
-  orig: 80, 80
-  offset: 0, 0
-  index: -1
-settings
-  rotate: false
-  xy: 531, 23
-  size: 80, 80
-  orig: 80, 80
-  offset: 0, 0
-  index: -1
-share
-  rotate: false
-  xy: 613, 23
+  xy: 555, 119
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 change_skin
   rotate: false
-  xy: 695, 25
+  xy: 657, 173
   size: 80, 78
   orig: 80, 78
+  offset: 0, 0
+  index: -1
+settings
+  rotate: false
+  xy: 739, 171
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+share
+  rotate: false
+  xy: 821, 171
+  size: 80, 80
+  orig: 80, 80
   offset: 0, 0
   index: -1

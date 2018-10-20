@@ -1,6 +1,7 @@
 package com.unimelb18.group16.actors;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.unimelb18.group16.box2d.UserData;
@@ -9,6 +10,10 @@ import com.unimelb18.group16.utils.Constants;
 import com.unimelb18.group16.utils.GameManager;
 
 public abstract class GameActor extends Actor {
+
+    public Vector2 getBodyPosition() {
+        return body.getPosition();
+    }
 
     protected Body body;
     protected UserData userData;

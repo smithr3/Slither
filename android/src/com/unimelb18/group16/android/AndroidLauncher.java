@@ -123,7 +123,6 @@ public class AndroidLauncher extends AndroidApplication implements
         };
 
 
-
         layout.setBackgroundColor(Color.YELLOW);
         setContentView(layout);
 
@@ -225,7 +224,7 @@ public class AndroidLauncher extends AndroidApplication implements
         //addButton.callOnClick();
 
         // ------  For AdMob ------
-        Message message = mHandler.obtainMessage(234,null);
+        Message message = mHandler.obtainMessage(234, null);
         message.sendToTarget();
 
         //   mAdView.setVisibility(View.VISIBLE);
@@ -269,9 +268,8 @@ public class AndroidLauncher extends AndroidApplication implements
     }
 
     @Override
-    public void share() {
-        String url = String.format("http://play.google.com/store/apps/details?id=%s",
-                BuildConfig.APPLICATION_ID);
+    public void share(String myScore) {
+        String url = String.format("I scored " + myScore + " in : " + BuildConfig.APPLICATION_ID);
         String message = String.format(Constants.SHARE_MESSAGE_PREFIX, url);
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");

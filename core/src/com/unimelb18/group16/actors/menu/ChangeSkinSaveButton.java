@@ -22,7 +22,7 @@ public class ChangeSkinSaveButton extends GameButton {
 
     @Override
     protected String getRegionName() {
-       return Constants.CHANGE_SKIN_ASSETS_ID;
+       return Constants.SAVE_BUTTON;
     }
 
     @Override

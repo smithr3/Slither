@@ -19,8 +19,6 @@ public class Food extends GameActor {
 
     private float stateTime;
 
-    private TextureRegion jumpingTexture;
-
     ShapeRenderer shapeRenderer;
 
     Camera camera;
@@ -33,8 +31,6 @@ public class Food extends GameActor {
         super(body);
         stateTime = 0f;
         shapeRenderer = new ShapeRenderer();
-
-        jumpingTexture = AssetsManager.getTextureRegion(Constants.RUNNER_JUMPING_ASSETS_ID);
     }
 
 
