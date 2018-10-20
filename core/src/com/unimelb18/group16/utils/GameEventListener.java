@@ -130,4 +130,7 @@ public interface GameEventListener {
      */
     public String get500JumpStreetAchievementId();
 
+
+    public String getSavedValue(String key);
+    public void saveValue(String key,String value);
 }

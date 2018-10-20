@@ -21,22 +21,22 @@ import com.unimelb18.group16.enums.GameState;
 import com.unimelb18.group16.utils.Constants;
 import com.unimelb18.group16.utils.GameManager;
 
-public class LeaderboardButton extends GameButton {
+public class MultiPlayerButton extends GameButton {
 
-    public interface LeaderboardButtonListener {
-        public void onLeaderboard();
+    public interface MultiPlayerButtonListener {
+        public void onMultiPlayer();
     }
 
-    private LeaderboardButtonListener listener;
+    private MultiPlayerButtonListener listener;
 
-    public LeaderboardButton(Rectangle bounds, LeaderboardButtonListener listener) {
+    public MultiPlayerButton(Rectangle bounds, MultiPlayerButtonListener listener) {
         super(bounds);
         this.listener = listener;
     }
 
     @Override
     protected String getRegionName() {
-        return Constants.LEADERBOARD_REGION_NAME;
+        return Constants.MULTI_PLAYER_REGION_NAME;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class LeaderboardButton extends GameButton {
 
     @Override
     public void touched() {
-        listener.onLeaderboard();
+        listener.onMultiPlayer();
     }
 
 }

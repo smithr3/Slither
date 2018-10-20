@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "62377380988-ghoejc9f44mca2jm0j9m8c6eu0qmblev.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.unimelb18.group16",
-            "certificate_hash": "1b931e6c1026df098b80563b9a36fa5d8d2a97a0"
-          }
-        },
-        {
           "client_id": "62377380988-iu06fcd0kgul7fqis9ii1jc1tvcgl7fi.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "62377380988-iu06fcd0kgul7fqis9ii1jc1tvcgl7fi.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

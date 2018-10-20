@@ -19,27 +19,27 @@ package com.unimelb18.group16.actors.menu;
 import com.badlogic.gdx.math.Rectangle;
 import com.unimelb18.group16.utils.Constants;
 
-public class AchievementsButton extends GameButton {
+public class RightChangeSkinButton extends GameButton {
 
-    public interface AchievementsButtonListener {
-        public void onAchievements();
+    public interface RightChangeSkinButtonButtonListener {
+        public void onRightChangeSkin();
     }
 
-    private AchievementsButtonListener listener;
+    private RightChangeSkinButtonButtonListener listener;
 
-    public AchievementsButton(Rectangle bounds, AchievementsButtonListener listener) {
+    public RightChangeSkinButton(Rectangle bounds, RightChangeSkinButtonButtonListener listener) {
         super(bounds);
         this.listener = listener;
     }
 
     @Override
     protected String getRegionName() {
-        return Constants.ACHIEVEMENTS_REGION_NAME;
+        return Constants.RIGHT_CHANGE_SKIN_REGION_NAME;
     }
 
     @Override
     public void touched() {
-        listener.onAchievements();
+        listener.onRightChangeSkin();
     }
 
 }

@@ -5,6 +5,9 @@ public enum UserDataType {
 
     GROUND,
     RUNNER,
-    ENEMY
+    ENEMY,
+    SNAKE_HEAD,
+    FOOD,
+    WORLD_END,
 
 }

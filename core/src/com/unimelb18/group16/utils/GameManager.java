@@ -189,6 +189,16 @@ public class GameManager implements GameEventListener {
         return gameEventListener.get500JumpStreetAchievementId();
     }
 
+    @Override
+    public String getSavedValue(String key) {
+        return gameEventListener.getSavedValue(key);
+    }
+
+    @Override
+    public void saveValue(String key, String value) {
+        gameEventListener.saveValue(key, value);
+    }
+
     private Preferences getPreferences() {
         return Gdx.app.getPreferences(PREFERENCES_NAME);
     }

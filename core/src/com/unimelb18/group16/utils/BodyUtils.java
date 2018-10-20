@@ -37,4 +37,22 @@ public class BodyUtils {
         return userData != null && userData.getUserDataType() == UserDataType.GROUND;
     }
 
+    public static boolean bodyIsSnakeHead(Body body) {
+        UserData userData = (UserData) body.getUserData();
+
+        return userData != null && userData.getUserDataType() == UserDataType.SNAKE_HEAD;
+    }
+
+    public static boolean bodyIsFood(Body body) {
+        UserData userData = (UserData) body.getUserData();
+
+        return userData != null && userData.getUserDataType() == UserDataType.FOOD;
+    }
+
+    public static boolean bodyIsWorldEnd(Body body) {
+        UserData userData = (UserData) body.getUserData();
+
+        return userData != null && userData.getUserDataType() == UserDataType.WORLD_END;
+    }
+
 }

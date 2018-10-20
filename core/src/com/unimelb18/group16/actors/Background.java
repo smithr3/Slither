@@ -1,12 +1,16 @@
 package com.unimelb18.group16.actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.unimelb18.group16.utils.Constants;
+import com.unimelb18.group16.utils.ParallaxBackground;
+import com.unimelb18.group16.utils.ParallaxLayer;
 
 public class Background extends Actor {
 
@@ -15,12 +19,24 @@ public class Background extends Actor {
     private Rectangle textureRegionBounds2;
     private int speed = 100;
 
-    public Background() {
+    ParallaxBackground parallaxBackground;
+
+    private Camera camera;
+
+    public Background(Camera camera) {
 
         Texture imgTexture = new Texture(Gdx.files.internal(Constants.BACKGROUND_IMAGE_PATH));
         imgTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
 
         textureRegion = new TextureRegion(imgTexture);
+
+
+
+        camera=camera;
+
+        parallaxBackground = new ParallaxBackground(new ParallaxLayer[]{
+                new ParallaxLayer(textureRegion,new Vector2(),new Vector2(0, 0)),
+        }, 800, 480,new Vector2(150,0));
 
         textureRegion.setRegion(0, 0, Constants.APP_WIDTH, Constants.APP_HEIGHT);
 
@@ -40,8 +56,9 @@ public class Background extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        batch.draw(textureRegion, textureRegionBounds1.x, textureRegionBounds1.y);
-        batch.draw(textureRegion, textureRegionBounds2.x, textureRegionBounds2.y);
+       // batch.draw(textureRegion,camera.position.x , camera.position.y);
+       // batch.draw(textureRegion, textureRegionBounds2.x, textureRegionBounds2.y);
+
     }
 
     private boolean leftBoundsReached(float delta) {

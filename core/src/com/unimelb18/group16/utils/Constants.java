@@ -7,8 +7,11 @@ public class Constants {
 
     public static final String GAME_NAME = "Slither Io";
 
-    public static final int APP_WIDTH = Gdx.graphics.getWidth();;
-    public static final int APP_HEIGHT = Gdx.graphics.getHeight();
+    public static final int APP_WIDTH = 2732;;
+    public static final int APP_HEIGHT = 2048;
+    public static final int CAMERA_DEFAULT_WIDTH = 1080;
+    public static final int CAMERA_DEFAULT_HEIGHT = 800;
+
     public static final float WORLD_TO_SCREEN = 32;
 
     public static final Vector2 WORLD_GRAVITY = new Vector2(0, -10);
@@ -74,12 +77,15 @@ public class Constants {
     public static final String MUSIC_OFF_REGION_NAME = "about";
     public static final String PAUSE_REGION_NAME = "about";
     public static final String PLAY_REGION_NAME = "about";
-    public static final String BIG_PLAY_REGION_NAME = "play_online";
-    public static final String LEADERBOARD_REGION_NAME = "play_ai";
+    public static final String BIG_PLAY_REGION_NAME = "play_ai";
+    public static final String MULTI_PLAYER_REGION_NAME = "play_online";
     public static final String ABOUT_REGION_NAME = "about";
     public static final String CLOSE_REGION_NAME = "about";
     public static final String SHARE_REGION_NAME = "share";
-    public static final String ACHIEVEMENTS_REGION_NAME = "settings";
+    public static final String SETTINGS_REGION_NAME = "settings";
+
+    public static final String LEFT_CHANGE_SKIN_REGION_NAME = "left_arrow";
+    public static final String RIGHT_CHANGE_SKIN_REGION_NAME = "right_arrow";
 
     public static final String TUTORIAL_LEFT_REGION_NAME = "ads";
     public static final String TUTORIAL_RIGHT_REGION_NAME = "ads";

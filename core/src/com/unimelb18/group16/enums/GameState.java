@@ -23,6 +23,7 @@ public enum GameState {
     PAUSED,
     OVER,
     ABOUT,
-    CHANGE_SKIN
+    CHANGE_SKIN,
+    SETTINGS,
 
 }

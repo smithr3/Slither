@@ -1,40 +1,65 @@
 package com.unimelb18.group16.actors;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.unimelb18.group16.utils.SharedData;
 
-public class SnakeBody extends Actor {
+public class SnakeBody {
     public Texture imgBody;
 
     private Rectangle bounds;
 
-    @Override
+    private ShapeRenderer shapeRenderer;
+
+    private int currentColor = 0;
+
+    private Color snakeColor[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.BLACK, Color.GRAY, Color.GREEN};
+
     public float getX() {
         return x;
     }
 
-    @Override
     public float getY() {
         return y;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
     }
 
     private float x;
     private float y;
 
+    public Texture getSnakeBody() {
+        return snakeBody;
+    }
+
+    public void setSnakeBodyTexture(String skin) {
+        this.snakeBody = new Texture(skin);
+    }
+
+    public Texture snakeBody;
+
     private int radius;
 
-    public SnakeBody(Rectangle bounds, float startX, float startY) {
+    public SnakeBody(float x, float y, String skin) {
+        this.x = x;
+        this.y = y;
+        snakeBody = new Texture(skin);
 
-        this.bounds = bounds;
-        setWidth(bounds.width);
-        setHeight(bounds.height);
+        String currentSkin = SharedData.getKey("currentSkin");
 
-        x = startX;
-        y = startY;
+        if (currentSkin != null && !currentSkin.equals("")) {
+            currentColor = Integer.parseInt(currentSkin);
+        }
 
-        imgBody = new Texture("circle.png");
+        this.shapeRenderer = shapeRenderer;
 
     }
 
@@ -47,12 +72,4 @@ public class SnakeBody extends Actor {
             y -= dy / speed;
         }
     }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-
-        batch.draw(imgBody, x, y);
-    }
-
 }
