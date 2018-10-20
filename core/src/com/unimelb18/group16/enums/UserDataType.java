@@ -9,5 +9,6 @@ public enum UserDataType {
     SNAKE_HEAD,
     FOOD,
     WORLD_END,
+    POWER_FOOD,
 
 }

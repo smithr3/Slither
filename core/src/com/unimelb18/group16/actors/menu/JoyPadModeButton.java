@@ -50,6 +50,7 @@ public class JoyPadModeButton extends Button {
         myTextureRegionSelected = new TextureRegion(myTextureSelected);
         myTexRegionDrawableSelected = new TextureRegionDrawable(myTextureRegionSelected);
 
+
         imageButtonStyle = new ImageButton.ImageButtonStyle();
 
         imageButtonStyle.up = myTexRegionDrawable;

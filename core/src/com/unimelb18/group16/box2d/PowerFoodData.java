@@ -6,8 +6,6 @@ import com.unimelb18.group16.utils.Constants;
 
 public class PowerFoodData extends UserData {
 
-    private Vector2 linearVelocity;
-
     public int getFoodType() {
         return foodType;
     }
@@ -16,16 +14,9 @@ public class PowerFoodData extends UserData {
 
     public PowerFoodData(float width, float height, int foodType) {
         super(width, height);
-        userDataType = UserDataType.ENEMY;
-        linearVelocity = Constants.ENEMY_LINEAR_VELOCITY;
+        userDataType = UserDataType.POWER_FOOD;
         this.foodType = foodType;
     }
 
-    public void setLinearVelocity(Vector2 linearVelocity) {
-        this.linearVelocity = linearVelocity;
-    }
 
-    public Vector2 getLinearVelocity() {
-        return linearVelocity;
-    }
 }

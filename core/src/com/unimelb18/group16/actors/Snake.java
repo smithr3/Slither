@@ -45,9 +45,19 @@ public class Snake extends GameActor {
         this.y = y;
     }
 
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
     private double speed;
     private double angle;
     private double turnSpeed;
+
+    public void setDefaultSpeed(int defaultSpeed) {
+        this.defaultSpeed = defaultSpeed;
+    }
+
+    private int defaultSpeed;
 
     private boolean stopMovement = false;
 
@@ -72,6 +82,8 @@ public class Snake extends GameActor {
     Vector2 touch;
     Vector2 dir;
 
+    int[] receivedPowerUp;
+
 
     TextureRegion snakeRegion;
 
@@ -87,7 +99,10 @@ public class Snake extends GameActor {
 
 
     public void removeSnakeBody() {
-        snakeBodies.remove(snakeBodies.size() - 1);
+        if (snakeBodies.size() > 5) {
+            snakeBodies.remove(snakeBodies.size() - 1);
+        }
+
     }
 
     public void addSnakeBody() {
@@ -106,6 +121,10 @@ public class Snake extends GameActor {
 
     ShapeRenderer shapeRenderer;
 
+    public int[] getReceivedPowerUp() {
+        return receivedPowerUp;
+    }
+
     public Snake(Body body, String name, int currentColor) {
         super(body);
         //setWidth(bounds.width);
@@ -120,6 +139,11 @@ public class Snake extends GameActor {
         dir = new Vector2();
         stopMovement = false;
 
+        receivedPowerUp = new int[5];
+
+        for (int k = 0; k < 5; k++) {
+            receivedPowerUp[k] = -1;
+        }
 
         this.currentColor = currentColor;
 
@@ -136,7 +160,9 @@ public class Snake extends GameActor {
         x = body.getPosition().x;
         y = body.getPosition().y;
 
-        speed = 200;
+        defaultSpeed = 200;
+
+        speed = defaultSpeed;
         angle = 0;
         turnSpeed = 0.07;
 
@@ -154,6 +180,17 @@ public class Snake extends GameActor {
 
         position.set(x, y);
     }
+
+
+    public void addReceivedPower(int type) {
+        for (int i = 0; i < 5; i++) {
+            if (receivedPowerUp[i] == -1) {
+                receivedPowerUp[i] = type;
+                break;
+            }
+        }
+    }
+
 
     @Override
     public SnakeUserData getUserData() {
@@ -258,7 +295,7 @@ public class Snake extends GameActor {
         if (boosting && snakeBodies.size() > 5) {
             speed = 400;
         } else {
-            speed = 200;
+            speed = defaultSpeed;
         }
 
         velocity4.scl((float) speed);

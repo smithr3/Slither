@@ -43,6 +43,12 @@ public class BodyUtils {
         return userData != null && userData.getUserDataType() == UserDataType.SNAKE_HEAD;
     }
 
+    public static boolean bodyIsPowerFood(Body body) {
+        UserData userData = (UserData) body.getUserData();
+
+        return userData != null && userData.getUserDataType() == UserDataType.POWER_FOOD;
+    }
+
     public static boolean bodyIsFood(Body body) {
         UserData userData = (UserData) body.getUserData();
 

@@ -22,6 +22,7 @@ import com.unimelb18.group16.actors.Enemy;
 import com.unimelb18.group16.actors.Food;
 import com.unimelb18.group16.actors.Ground;
 import com.unimelb18.group16.actors.MiniMap;
+import com.unimelb18.group16.actors.NameField;
 import com.unimelb18.group16.actors.PowerFood;
 import com.unimelb18.group16.actors.Runner;
 import com.unimelb18.group16.actors.Score;
@@ -46,19 +47,23 @@ import com.unimelb18.group16.actors.menu.SettingsButton;
 import com.unimelb18.group16.actors.menu.SettingsSaveButton;
 import com.unimelb18.group16.actors.menu.ShareButton;
 import com.unimelb18.group16.actors.menu.SoundButton;
+import com.unimelb18.group16.actors.menu.SpeedButton;
 import com.unimelb18.group16.actors.menu.StartButton;
 import com.unimelb18.group16.actors.menu.TopTenPlayerLabel;
 import com.unimelb18.group16.actors.menu.Tutorial;
+import com.unimelb18.group16.box2d.PowerFoodData;
 import com.unimelb18.group16.enums.Difficulty;
 import com.unimelb18.group16.enums.GameState;
 import com.unimelb18.group16.utils.AudioUtils;
 import com.unimelb18.group16.utils.BodyUtils;
 import com.unimelb18.group16.utils.Constants;
 import com.unimelb18.group16.utils.GameManager;
+import com.unimelb18.group16.utils.PowerUpsController;
 import com.unimelb18.group16.utils.SharedData;
 import com.unimelb18.group16.utils.WorldUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -67,26 +72,36 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     private static final int VIEWPORT_WIDTH = Constants.APP_WIDTH;
     private static final int VIEWPORT_HEIGHT = Constants.APP_HEIGHT;
-
+    final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
+    final java.util.Random rand = new java.util.Random();
+    // consider using a Map<String,Boolean> to say whether the identifier is being used or not
+    final Set<String> identifiers = new HashSet<String>();
+    private final float TIME_STEP = 1 / 300f;
+    ArrayList<Body> destroyBodyList;
+    GestureDetector gestureDetector;
+    MiniMap miniMap;
+    ScoreLabel scoreLabel;
+    TopTenPlayerLabel topTenPlayerLabel;
+    ClassicModeButton classicModeButton;
+    ArrowModeButton arrowModeButton;
+    JoyPadModeButton joyPadModeButton;
+    float timer = 0;
+    ShapeRenderer shapeRenderer = new ShapeRenderer();
+    float newPortWidth = Constants.CAMERA_DEFAULT_WIDTH;
+    float newPortHeight = Constants.CAMERA_DEFAULT_HEIGHT;
+    StringBuilder topTenPlayers = new StringBuilder();
+    PowerFoodData powerFoodData;
+    String selectedMode;
     private World world;
     private Ground ground;
     private Runner runner;
     private Snake snake;
-
     private ArrayList<Vector2> foodOnDeath;
-
-    ArrayList<Body> destroyBodyList;
-
     private ChangeSkinSnake changeSkinSnake;
-
-    private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
-
     private OrthographicCamera camera;
-
     private Rectangle screenLeftSide;
     private Rectangle screenRightSide;
-
     private SoundButton soundButton;
     private MusicButton musicButton;
     private PauseButton pauseButton;
@@ -100,24 +115,15 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
     private RightChangeSkinButton rightChangeSkinButton;
     private ChangeSkinSaveButton changeSkinSaveButton;
     private SettingsSaveButton settingsSaveButton;
-
     private Score score;
     private float totalTimePassed;
     private boolean tutorialShown;
-
     private ArrayList<Snake> enemySnakes;
-
     private ShapeRenderer shape;
-
     private int maxSnakes = 0;
-
-    GestureDetector gestureDetector;
-
     private Vector3 touchPoint;
 
     public GameStage() {
-//        super(new ScalingViewport(Scaling.stretch, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
-//                new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT)));
         shape = new ShapeRenderer();
 
         setUpCamera();
@@ -134,8 +140,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         Gdx.input.setInputProcessor(this);
 
         gestureDetector = new GestureDetector(this);
-        //  Gdx.input.setInputProcessor(gestureDetector);
-        //   Gdx.input.setInputProcessor(this);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(this);
@@ -163,21 +167,15 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         //  setUpFixedMenu();
     }
 
-    MiniMap miniMap;
-
     private void setUpMiniMap() {
         miniMap = new MiniMap(getCamera());
         addActor(miniMap);
     }
 
-    ScoreLabel scoreLabel;
-
     private void setUpScoreLabel() {
         scoreLabel = new ScoreLabel();
         addActor(scoreLabel);
     }
-
-    TopTenPlayerLabel topTenPlayerLabel;
 
     private void setUpTopTenPlayerLabel() {
         topTenPlayerLabel = new TopTenPlayerLabel();
@@ -189,7 +187,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
                 getCamera().viewportWidth, getCamera().viewportHeight / 4);
         addActor(new GameLabel(gameLabelBounds));
     }
-
 
     private void setUpChangeSkinSnake() {
         Rectangle snakeSkinBounds = new Rectangle(getCamera().viewportWidth, getCamera().viewportHeight,
@@ -247,20 +244,19 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         addActor(pauseButton);
     }
 
-    ClassicModeButton classicModeButton;
-    ArrowModeButton arrowModeButton;
-    JoyPadModeButton joyPadModeButton;
-
     /**
      * These menu buttons are only displayed when the game is over
      */
     private void setUpMainMenu() {
         setUpStart();
+
         setUpMultiPlayer();
         setUpAbout();
         setUpChangeSkin();
 
         setUpSettings();
+
+        setUpNameField();
 
 
     }
@@ -317,6 +313,13 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
                 getCamera().viewportHeight / 10);
         aboutButton = new AboutButton(aboutButtonBounds, new GameAboutButtonListener());
         addActor(aboutButton);
+    }
+
+    NameField nameField;
+
+    private void setUpNameField() {
+        nameField = new NameField(getCamera());
+        addActor(nameField);
     }
 
     private void setUpChangeSkin() {
@@ -435,7 +438,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     }
 
-
     private void createEnemy() {
         Enemy enemy = new Enemy(WorldUtils.createEnemy(world));
         enemy.getUserData().setLinearVelocity(
@@ -463,8 +465,9 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
     }
 
     private void setUpCameraViewPort() {
+
         camera.setToOrtho(false, Constants.CAMERA_DEFAULT_WIDTH, Constants.CAMERA_DEFAULT_HEIGHT);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f);
+        camera.position.set(Constants.CAMERA_DEFAULT_WIDTH / 2, Constants.CAMERA_DEFAULT_HEIGHT / 2, 0f);
         camera.update();
     }
 
@@ -491,6 +494,18 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         addActor(new PausedLabel(pauseLabelBounds));
     }
 
+    private SpeedButton speedButton;
+
+    private void setUpSpeedButton() {
+        selectedMode = SharedData.getKey("setting");
+        if (selectedMode.equals("JoyPad") || selectedMode.equals("Arrow")) {
+            speedButton = new SpeedButton(getCamera(), new GameSpeedButtonListener());
+            addActor(speedButton);
+        }
+
+
+    }
+
     private void setUpTutorial() {
         if (tutorialShown) {
             return;
@@ -509,14 +524,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
                 Constants.TUTORIAL_LEFT_TEXT));
     }
 
-
-    final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
-
-    final java.util.Random rand = new java.util.Random();
-
-    // consider using a Map<String,Boolean> to say whether the identifier is being used or not
-    final Set<String> identifiers = new HashSet<String>();
-
     public String randomIdentifier() {
         StringBuilder builder = new StringBuilder();
         while (builder.toString().length() == 0) {
@@ -531,7 +538,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         return builder.toString();
     }
 
-
     private void setUpRightTutorial() {
         float width = getCamera().viewportHeight / 4;
         float x = getCamera().viewportWidth * 3 / 4 - width / 2;
@@ -540,15 +546,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         addActor(new Tutorial(rightTutorialBounds, Constants.TUTORIAL_RIGHT_REGION_NAME,
                 Constants.TUTORIAL_RIGHT_TEXT));
     }
-
-    float timer = 0;
-
-    ShapeRenderer shapeRenderer = new ShapeRenderer();
-
-    float newPortWidth = Constants.CAMERA_DEFAULT_WIDTH;
-    float newPortHeight = Constants.CAMERA_DEFAULT_HEIGHT;
-
-    StringBuilder topTenPlayers = new StringBuilder();
 
     @Override
     public void act(float delta) {
@@ -578,6 +575,20 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
         if (GameManager.getInstance().getGameState() == GameState.RUNNING) {
 
+            if (speedButton != null) {
+                speedButton.setPosition(camera.position.x + camera.viewportWidth * 2 / 5, camera.position.y - camera.viewportHeight * 2 / 5);
+            }
+
+            if (snake != null && snake.isBoosting() && snake.snakeBodies.size() > 5) {
+                snake.removeSnakeBody();
+                createFood(snake.snakeBodies.get(snake.snakeBodies.size() - 1).getX(), snake.snakeBodies.get(snake.snakeBodies.size() - 1).getY());
+            }
+
+            if (snake != null && snake.isBoosting() && snake.snakeBodies.size() <= 5) {
+                snake.setBoosting(false);
+            }
+
+
             topTenPlayers.setLength(0);
 
             topTenPlayers.append(snake.getSnakeName()).append(" : ").append(snake.snakeBodies.size()).append("\n");
@@ -602,6 +613,18 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
             Random random = new Random();
 
+            if (PowerUpsController.showPowerUp()) {
+                createPowerFood(random.nextInt(Constants.APP_WIDTH),
+                        random.nextInt(Constants.APP_HEIGHT),
+                        random.nextInt(2));
+
+                PowerUpsController.currentPowerUpCount++;
+
+                PowerUpsController.lastShown = Calendar.getInstance().getTime();
+
+            }
+
+
             if (timer >= 1f) {
 
                 for (Snake snake : enemySnakes) {
@@ -610,7 +633,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
                 createFood(random.nextInt(Constants.APP_WIDTH), random.nextInt(Constants.APP_HEIGHT));
 
-                createPowerFood(random.nextInt(Constants.APP_WIDTH), random.nextInt(Constants.APP_HEIGHT), random.nextInt(2));
 
                 if (maxSnakes < 5) {
                     addEnemySnake();
@@ -724,7 +746,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     }
 
-
     public boolean touchDragged(int x, int y, int pointer) {
 
 
@@ -739,7 +760,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
         return super.touchDragged(x, y, pointer);
     }
-
 
     public void update(float deltaTime) {
 
@@ -779,6 +799,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         if (GameManager.getInstance().getGameState() == GameState.RUNNING) {
             if (snake != null) {
                 snake.setBoosting(false);
+
             }
 
         }
@@ -837,7 +858,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         getCamera().unproject(touchPoint.set(x, y, 0));
     }
 
-
     @Override
     public void beginContact(Contact contact) {
 
@@ -895,7 +915,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         if ((BodyUtils.bodyIsSnakeHead(a) && BodyUtils.bodyIsEnemy(b)) ||
                 (BodyUtils.bodyIsEnemy(a) && BodyUtils.bodyIsSnakeHead(b))) {
 
-
             for (Snake enemySnake : enemySnakes) {
                 if (BodyUtils.bodyIsSnakeHead(a)) {
                     if (a.getUserData().hashCode() == enemySnake.getUserData().hashCode()) {
@@ -925,16 +944,56 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             } else if (BodyUtils.bodyIsEnemy(a)) {
                 destroyBodyList.add(a);
             }
+        }
 
 
-            // displayAd();
-            // GameManager.getInstance().submitScore(score.getScore());
-            // onGameOver();
-            // GameManager.getInstance().addGamePlayed();
-            // GameManager.getInstance().addJumpCount(runner.getJumpCount());
+        if ((BodyUtils.bodyIsSnakeHead(a) && BodyUtils.bodyIsPowerFood(b)) ||
+                (BodyUtils.bodyIsPowerFood(a) && BodyUtils.bodyIsSnakeHead(b))) {
+
+            if (BodyUtils.bodyIsPowerFood(b)) {
+                powerFoodData = (PowerFoodData) b.getUserData();
+            } else if (BodyUtils.bodyIsPowerFood(a)) {
+                powerFoodData = (PowerFoodData) a.getUserData();
+            }
+
+            for (Snake enemySnake : enemySnakes) {
+                if (BodyUtils.bodyIsSnakeHead(a)) {
+
+                    if (a.getUserData().hashCode() == enemySnake.getUserData().hashCode()) {
+
+                        PowerUpsController.applyPowerUp(enemySnake, powerFoodData.getFoodType());
+                    }
+                }
+                if (BodyUtils.bodyIsSnakeHead(b)) {
+
+
+                    if (b.getUserData().hashCode() == enemySnake.getUserData().hashCode()) {
+
+                        PowerUpsController.applyPowerUp(enemySnake, powerFoodData.getFoodType());
+                    }
+                }
+            }
+            if (BodyUtils.bodyIsSnakeHead(a)) {
+                if (a.getUserData().hashCode() == snake.getUserData().hashCode()) {
+                    PowerUpsController.applyPowerUp(snake, powerFoodData.getFoodType());
+                }
+            }
+
+            if (BodyUtils.bodyIsSnakeHead(b)) {
+                if (b.getUserData().hashCode() == snake.getUserData().hashCode()) {
+                    PowerUpsController.applyPowerUp(snake, powerFoodData.getFoodType());
+                }
+            }
+
+            if (BodyUtils.bodyIsPowerFood(b)) {
+                destroyBodyList.add(b);
+            } else if (BodyUtils.bodyIsPowerFood(a)) {
+                destroyBodyList.add(a);
+            }
+
+            PowerUpsController.currentPowerUpCount--;
         }
     }
-
 
     private void updateDifficulty() {
 
@@ -986,7 +1045,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
     public boolean tap(float x, float y, int count, int button) {
 
         if (GameManager.getInstance().getGameState() == GameState.RUNNING) {
-            if (snake != null && count == 1) {
+            if (snake != null && count == 1 && snake.snakeBodies.size() > 5) {
                 snake.setBoosting(true);
             }
 
@@ -1030,6 +1089,69 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     }
 
+    private void onGamePaused() {
+        GameManager.getInstance().setGameState(GameState.PAUSED);
+    }
+
+    private void onGameResumed() {
+        GameManager.getInstance().setGameState(GameState.RUNNING);
+    }
+
+    private void onGameOver() {
+        GameManager.getInstance().setGameState(GameState.OVER);
+        GameManager.getInstance().resetDifficulty();
+        totalTimePassed = 0;
+        setUpMainMenu();
+        if (snake != null)
+            snake.stopMovement();
+        setUpCameraViewPort();
+
+        PowerUpsController.currentPowerUpCount = 0;
+
+    }
+
+    private void onGameAbout() {
+        GameManager.getInstance().setGameState(GameState.ABOUT);
+        clear();
+        setUpStageBase();
+        setUpGameLabel();
+        setUpAboutText();
+        setUpAbout();
+    }
+
+    private void onGameSettings() {
+        GameManager.getInstance().setGameState(GameState.SETTINGS);
+        clear();
+        setUpStageBase();
+        setUpGameLabel();
+
+        addSettingsButton();
+        setSettingsSaveButton();
+
+        selectedMode = SharedData.getKey("setting");
+
+        if (selectedMode.equals("JoyPad")) {
+            joyPadModeButton.select(true);
+        } else if (selectedMode.equals("Classic")) {
+            classicModeButton.select(true);
+        } else if (selectedMode.equals("Arrow")) {
+            arrowModeButton.select(true);
+        }
+    }
+
+    private void onGameChangeSkin() {
+        GameManager.getInstance().setGameState(GameState.CHANGE_SKIN);
+        clear();
+        setUpStageBase();
+        setUpGameLabel();
+
+        setUpChangeSkinSnake();
+
+        setUpLeftChangeSkinButton();
+        setUpRightChangeSkinButton();
+        setChangeSkinSaveButton();
+    }
+
     private class GamePauseButtonListener implements PauseButton.PauseButtonListener {
 
         @Override
@@ -1058,6 +1180,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             //  setUpPause();
             //   setUpTutorial();
             onGameResumed();
+            setUpSpeedButton();
         }
 
     }
@@ -1077,6 +1200,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             //   setUpPause();
             //   setUpTutorial();
             onGameResumed();
+            setUpSpeedButton();
         }
 
     }
@@ -1097,7 +1221,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     }
 
-
     private class LeftChangeSkinButtonListener implements LeftChangeSkinButton.LeftChangeSkinButtonButtonListener {
 
         @Override
@@ -1109,6 +1232,20 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     }
 
+    private class GameSpeedButtonListener implements SpeedButton.SpeedButtonListener {
+
+        @Override
+        public void onSpeed() {
+            if (GameManager.getInstance().getGameState() == GameState.RUNNING) {
+                snake.setBoosting(true);
+            }
+        }
+
+        @Override
+        public void removeSpeed() {
+            snake.setBoosting(false);
+        }
+    }
 
     private class RightChangeSkinButtonListener implements RightChangeSkinButton.RightChangeSkinButtonButtonListener {
 
@@ -1120,7 +1257,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         }
 
     }
-
 
     private class ChangeSkinSaveButtonListener implements ChangeSkinSaveButton.ChangeSkinSaveButtonListener {
 
@@ -1137,8 +1273,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         }
 
     }
-
-    String selectedMode;
 
     private class GameSettingsSaveButtonListener implements SettingsSaveButton.SettingsSaveButtonListener {
 
@@ -1157,7 +1291,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         }
 
     }
-
 
     private class GameChangeSkinButtonListener implements ChangeSkinButton.ChangeSkinButtonListener {
 
@@ -1230,66 +1363,5 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             onGameSettings();
         }
 
-    }
-
-    private void onGamePaused() {
-        GameManager.getInstance().setGameState(GameState.PAUSED);
-    }
-
-    private void onGameResumed() {
-        GameManager.getInstance().setGameState(GameState.RUNNING);
-    }
-
-    private void onGameOver() {
-        GameManager.getInstance().setGameState(GameState.OVER);
-        GameManager.getInstance().resetDifficulty();
-        totalTimePassed = 0;
-        setUpMainMenu();
-        if (snake != null)
-            snake.stopMovement();
-        setUpCameraViewPort();
-
-    }
-
-    private void onGameAbout() {
-        GameManager.getInstance().setGameState(GameState.ABOUT);
-        clear();
-        setUpStageBase();
-        setUpGameLabel();
-        setUpAboutText();
-        setUpAbout();
-    }
-
-    private void onGameSettings() {
-        GameManager.getInstance().setGameState(GameState.SETTINGS);
-        clear();
-        setUpStageBase();
-        setUpGameLabel();
-
-        addSettingsButton();
-        setSettingsSaveButton();
-
-        selectedMode = SharedData.getKey("setting");
-
-        if (selectedMode.equals("JoyPad")) {
-            joyPadModeButton.select(true);
-        } else if (selectedMode.equals("Classic")) {
-            classicModeButton.select(true);
-        } else if (selectedMode.equals("Arrow")) {
-            arrowModeButton.select(true);
-        }
-    }
-
-    private void onGameChangeSkin() {
-        GameManager.getInstance().setGameState(GameState.CHANGE_SKIN);
-        clear();
-        setUpStageBase();
-        setUpGameLabel();
-
-        setUpChangeSkinSnake();
-
-        setUpLeftChangeSkinButton();
-        setUpRightChangeSkinButton();
-        setChangeSkinSaveButton();
     }
 }

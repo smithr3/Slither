@@ -1,13 +1,13 @@
 package com.unimelb18.group16.utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Constants {
 
     public static final String GAME_NAME = "Slither Io";
 
-    public static final int APP_WIDTH = 2732;;
+    public static final int APP_WIDTH = 2732;
+    ;
     public static final int APP_HEIGHT = 2048;
     public static final int CAMERA_DEFAULT_WIDTH = 1080;
     public static final int CAMERA_DEFAULT_HEIGHT = 800;
@@ -59,17 +59,17 @@ public class Constants {
     public static final String CHANGE_SKIN_IMAGE_PATH = "change_skin.png";
     public static final String GROUND_IMAGE_PATH = "ground.png";
     public static final String SPRITES_ATLAS_PATH = "slither.pack";
-    public static final String[] RUNNER_RUNNING_REGION_NAMES = new String[] {"change_skin", "change_skin"};
+    public static final String[] RUNNER_RUNNING_REGION_NAMES = new String[]{"change_skin", "change_skin"};
     public static final String RUNNER_DODGING_REGION_NAME = "ads";
     public static final String RUNNER_HIT_REGION_NAME = "ads";
     public static final String RUNNER_JUMPING_REGION_NAME = "ads";
 
-    public static final String[] RUNNING_SMALL_ENEMY_REGION_NAMES = new String[] {"change_skin", "change_skin"};
-    public static final String[] RUNNING_LONG_ENEMY_REGION_NAMES = new String[] {"change_skin", "change_skin"};
-    public static final String[] RUNNING_BIG_ENEMY_REGION_NAMES = new String[] {"change_skin", "change_skin"};
-    public static final String[] RUNNING_WIDE_ENEMY_REGION_NAMES = new String[] {"change_skin", "change_skin"};
-    public static final String[] FLYING_SMALL_ENEMY_REGION_NAMES = new String[] {"change_skin", "change_skin"};
-    public static final String[] FLYING_WIDE_ENEMY_REGION_NAMES = new String[] {"change_skin", "change_skin"};
+    public static final String[] RUNNING_SMALL_ENEMY_REGION_NAMES = new String[]{"change_skin", "change_skin"};
+    public static final String[] RUNNING_LONG_ENEMY_REGION_NAMES = new String[]{"change_skin", "change_skin"};
+    public static final String[] RUNNING_BIG_ENEMY_REGION_NAMES = new String[]{"change_skin", "change_skin"};
+    public static final String[] RUNNING_WIDE_ENEMY_REGION_NAMES = new String[]{"change_skin", "change_skin"};
+    public static final String[] FLYING_SMALL_ENEMY_REGION_NAMES = new String[]{"change_skin", "change_skin"};
+    public static final String[] FLYING_WIDE_ENEMY_REGION_NAMES = new String[]{"change_skin", "change_skin"};
 
     public static final String SOUND_ON_REGION_NAME = "ads";
     public static final String SOUND_OFF_REGION_NAME = "about";
@@ -103,5 +103,10 @@ public class Constants {
     public static final String SHARE_MESSAGE_PREFIX = "Check out " + GAME_NAME + " %s";
     public static final String SHARE_TITLE = "Share!";
     public static final String PAUSED_LABEL = "Paused";
+
+
+    public static final int SPEED_POWER = 1;
+
+    public static final int LONG_POWER = 0;
 
 }
