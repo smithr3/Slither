@@ -71,10 +71,10 @@ public class Constants {
     public static final String[] FLYING_SMALL_ENEMY_REGION_NAMES = new String[]{"change_skin", "change_skin"};
     public static final String[] FLYING_WIDE_ENEMY_REGION_NAMES = new String[]{"change_skin", "change_skin"};
 
-    public static final String SOUND_ON_REGION_NAME = "ads";
-    public static final String SOUND_OFF_REGION_NAME = "about";
-    public static final String MUSIC_ON_REGION_NAME = "about";
-    public static final String MUSIC_OFF_REGION_NAME = "about";
+    public static final String SOUND_ON_REGION_NAME = "sound";
+    public static final String SOUND_OFF_REGION_NAME = "sound";
+    public static final String MUSIC_ON_REGION_NAME = "music";
+    public static final String MUSIC_OFF_REGION_NAME = "music";
     public static final String PAUSE_REGION_NAME = "about";
     public static final String PLAY_REGION_NAME = "about";
     public static final String BIG_PLAY_REGION_NAME = "play_ai";

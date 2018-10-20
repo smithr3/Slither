@@ -5,71 +5,85 @@ filter: Nearest,Nearest
 repeat: none
 save
   rotate: false
-  xy: 1, 143
+  xy: 1, 135
   size: 470, 108
   orig: 470, 108
   offset: 0, 0
   index: -1
 play_ai
   rotate: false
-  xy: 1, 91
+  xy: 1, 83
   size: 186, 50
   orig: 186, 50
   offset: 0, 0
   index: -1
 play_online
   rotate: false
-  xy: 473, 201
+  xy: 473, 193
   size: 182, 50
   orig: 182, 50
   offset: 0, 0
   index: -1
-left_arrow
+sound
   rotate: false
   xy: 1, 1
+  size: 105, 80
+  orig: 105, 80
+  offset: 0, 0
+  index: -1
+about
+  rotate: false
+  xy: 108, 1
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+left_arrow
+  rotate: false
+  xy: 473, 103
   size: 87, 88
   orig: 87, 88
   offset: 0, 0
   index: -1
 right_arrow
   rotate: false
-  xy: 90, 1
+  xy: 562, 103
   size: 87, 88
   orig: 87, 88
   offset: 0, 0
   index: -1
-about
-  rotate: false
-  xy: 473, 119
-  size: 80, 80
-  orig: 80, 80
-  offset: 0, 0
-  index: -1
 ads
   rotate: false
-  xy: 555, 119
+  xy: 657, 163
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
-change_skin
+music
   rotate: false
-  xy: 657, 173
-  size: 80, 78
-  orig: 80, 78
+  xy: 739, 163
+  size: 80, 80
+  orig: 80, 80
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 739, 171
+  xy: 821, 163
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 share
   rotate: false
-  xy: 821, 171
+  xy: 903, 163
   size: 80, 80
   orig: 80, 80
+  offset: 0, 0
+  index: -1
+change_skin
+  rotate: false
+  xy: 651, 83
+  size: 80, 78
+  orig: 80, 78
   offset: 0, 0
   index: -1

@@ -19,7 +19,6 @@ public class Enemy extends GameActor {
 
     public Enemy(Body body) {
         super(body);
-        animation = AssetsManager.getAnimation(getUserData().getAnimationAssetId());
         stateTime = 0f;
     }
 

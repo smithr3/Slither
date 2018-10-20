@@ -1,19 +1,10 @@
 package com.unimelb18.group16.utils;
 
-import com.unimelb18.group16.enums.EnemyType;
-
 import java.util.Random;
 
 
 public class RandomUtils {
 
-    /**
-     * @return a random {@link com.unimelb18.group16.enums.EnemyType}
-     */
-    public static EnemyType getRandomEnemyType() {
-        RandomEnum<EnemyType> randomEnum = new RandomEnum<EnemyType>(EnemyType.class);
-        return randomEnum.random();
-    }
 
     /**
      * @see <a href="http://stackoverflow.com/a/1973018">Stack Overflow</a>

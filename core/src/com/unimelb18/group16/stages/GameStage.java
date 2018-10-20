@@ -18,13 +18,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.unimelb18.group16.actors.ChangeSkinSnake;
-import com.unimelb18.group16.actors.Enemy;
 import com.unimelb18.group16.actors.Food;
-import com.unimelb18.group16.actors.Ground;
 import com.unimelb18.group16.actors.MiniMap;
 import com.unimelb18.group16.actors.NameField;
 import com.unimelb18.group16.actors.PowerFood;
-import com.unimelb18.group16.actors.Runner;
 import com.unimelb18.group16.actors.Score;
 import com.unimelb18.group16.actors.Snake;
 import com.unimelb18.group16.actors.SnakeBody;
@@ -93,8 +90,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
     PowerFoodData powerFoodData;
     String selectedMode;
     private World world;
-    private Ground ground;
-    private Runner runner;
     private Snake snake;
     private ArrayList<Vector2> foodOnDeath;
     private ChangeSkinSnake changeSkinSnake;
@@ -164,7 +159,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         WorldUtils.createTopWorldEnd(world);
         WorldUtils.createBottomWorldEnd(world);
 
-        //  setUpFixedMenu();
+
     }
 
     private void setUpMiniMap() {
@@ -209,7 +204,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
     private void setUpFixedMenu() {
         setUpSound();
         setUpMusic();
-        setUpScore();
     }
 
     private void setUpSound() {
@@ -257,7 +251,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         setUpSettings();
 
         setUpNameField();
-
+        setUpFixedMenu();
 
     }
 
@@ -392,10 +386,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         // addActor(new Background(getCamera()));
     }
 
-    private void setUpGround() {
-        ground = new Ground(WorldUtils.createGround(world));
-        addActor(ground);
-    }
 
     private void setUpCharacters() {
 
@@ -409,15 +399,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
         createFood(random.nextInt((int) getCamera().viewportWidth), random.nextInt((int) getCamera().viewportHeight));
     }
-
-    private void setUpRunner() {
-        if (runner != null) {
-            runner.remove();
-        }
-        runner = new Runner(WorldUtils.createRunner(world));
-        addActor(runner);
-    }
-
     private void setUpSnakePlay() {
         if (snake != null) {
             snake.remove();
@@ -438,12 +419,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     }
 
-    private void createEnemy() {
-        Enemy enemy = new Enemy(WorldUtils.createEnemy(world));
-        enemy.getUserData().setLinearVelocity(
-                GameManager.getInstance().getDifficulty().getEnemyLinearVelocity());
-        addActor(enemy);
-    }
 
     private void createFood(float x, float y) {
         Food food = new Food(WorldUtils.createFood(world, x, y));

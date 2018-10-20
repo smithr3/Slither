@@ -7,13 +7,11 @@ import com.unimelb18.group16.utils.Constants;
 public class EnemyUserData extends UserData {
 
     private Vector2 linearVelocity;
-    private String animationAssetId;
 
-    public EnemyUserData(float width, float height, String animationAssetId) {
+    public EnemyUserData(float width, float height) {
         super(width, height);
         userDataType = UserDataType.ENEMY;
         linearVelocity = Constants.ENEMY_LINEAR_VELOCITY;
-        this.animationAssetId = animationAssetId;
     }
 
     public void setLinearVelocity(Vector2 linearVelocity) {
@@ -24,7 +22,4 @@ public class EnemyUserData extends UserData {
         return linearVelocity;
     }
 
-    public String getAnimationAssetId() {
-        return animationAssetId;
-    }
 }

@@ -28,8 +28,8 @@ public class AudioUtils {
     private static Sound jumpSound;
     private static Sound hitSound;
 
-    private static final String MUSIC_ON_PREFERENCE = "music_on";
-    private static final String SOUND_ON_PREFERENCE = "sound_on";
+    private static final String MUSIC_ON_PREFERENCE = "music";
+    private static final String SOUND_ON_PREFERENCE = "sound";
 
     private AudioUtils() {
     }

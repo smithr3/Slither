@@ -3,11 +3,8 @@ package com.unimelb18.group16.actors;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.unimelb18.group16.box2d.EnemyUserData;
 import com.unimelb18.group16.box2d.PowerFoodData;
-import com.unimelb18.group16.box2d.RunnerUserData;
 
 public class PowerFood extends GameActor {
 

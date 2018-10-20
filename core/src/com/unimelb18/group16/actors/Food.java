@@ -3,16 +3,11 @@ package com.unimelb18.group16.actors;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.unimelb18.group16.box2d.EnemyUserData;
-import com.unimelb18.group16.box2d.RunnerUserData;
 import com.unimelb18.group16.enums.GameState;
-import com.unimelb18.group16.utils.AssetsManager;
-import com.unimelb18.group16.utils.Constants;
 import com.unimelb18.group16.utils.GameManager;
 
 public class Food extends GameActor {
@@ -35,8 +30,8 @@ public class Food extends GameActor {
 
 
     @Override
-    public RunnerUserData getUserData() {
-        return (RunnerUserData) userData;
+    public EnemyUserData getUserData() {
+        return (EnemyUserData) userData;
     }
 
     @Override
