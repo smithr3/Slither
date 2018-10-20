@@ -15,7 +15,7 @@ public class SnakeBody {
 
     private int currentColor = 0;
 
-    private Color snakeColor[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.BLACK, Color.GRAY, Color.GREEN};
+    private String snakeColor[] = {"skin_1.png", "skin_2.png", "skin_3.png", "skin_4.png"};
 
     public float getX() {
         return x;
@@ -51,6 +51,7 @@ public class SnakeBody {
     public SnakeBody(float x, float y, String skin) {
         this.x = x;
         this.y = y;
+
         snakeBody = new Texture(skin);
 
         String currentSkin = SharedData.getKey("currentSkin");

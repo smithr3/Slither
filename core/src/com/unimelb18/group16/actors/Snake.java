@@ -47,7 +47,7 @@ public class Snake extends GameActor {
 
     private double distance;
 
-    private Color snakeColor[] = {Color.RED, Color.BLUE, Color.YELLOW, Color.BLACK, Color.GRAY, Color.GREEN};
+    private String snakeColor[] = {"skin_1.png", "skin_2.png", "skin_3.png", "skin_4.png"};
     private int currentColor = 0;
 
     private int headRadius;
@@ -65,6 +65,8 @@ public class Snake extends GameActor {
 
     Vector2 touch;
     Vector2 dir;
+
+
 
     TextureRegion snakeRegion;
 
@@ -85,7 +87,7 @@ public class Snake extends GameActor {
 
     public void addSnakeBody() {
 
-        SnakeBody snakeBody = new SnakeBody(this.snakeBodies.get(this.snakeBodies.size() - 1).getX(), this.snakeBodies.get(this.snakeBodies.size() - 1).getY(), "skin_1.png");
+        SnakeBody snakeBody = new SnakeBody(this.snakeBodies.get(this.snakeBodies.size() - 1).getX(), this.snakeBodies.get(this.snakeBodies.size() - 1).getY(), snakeColor[currentColor]);
 
 
         this.snakeBodies.add(snakeBody);
@@ -111,8 +113,14 @@ public class Snake extends GameActor {
         touch = new Vector2();
         dir = new Vector2();
 
+        String currentSkin = SharedData.getKey("currentSkin");
+
+        if (currentSkin != null && !currentSkin.equals("")) {
+            currentColor = Integer.parseInt(currentSkin);
+        }
+
         snakeHead = new Texture("worm_eyes.png");
-        snakeBody = new Texture("skin_2.png");
+        snakeBody = new Texture(snakeColor[currentColor]);
 
         snakeRegion = new TextureRegion(snakeHead);
         snakeRegion.setRegion(0, 0, snakeHead.getWidth(), snakeHead.getHeight());
@@ -131,14 +139,10 @@ public class Snake extends GameActor {
 
         shapeRenderer = new ShapeRenderer();
 
-        String currentSkin = SharedData.getKey("currentSkin");
 
-        if (currentSkin != null && !currentSkin.equals("")) {
-            currentColor = Integer.parseInt(currentSkin);
-        }
 
         for (int i = 0; i < 5; i++) {
-            snakeBodies.add(new SnakeBody(x, y, "skin_1.png"));
+            snakeBodies.add(new SnakeBody(x, y, snakeColor[currentColor]));
         }
 
         position.set(x, y);
