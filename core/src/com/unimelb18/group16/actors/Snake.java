@@ -138,11 +138,9 @@ public class Snake extends GameActor {
 
     public Snake(Body body, String name, int currentColor, String uniqueName, int size) {
         super(body);
-        //setWidth(bounds.width);
-        // setHeight(bounds.height);
 
         this.snakeName = name;
-        // this.camera=camera;
+
         position = new Vector2();
         velocity = new Vector2();
         movement = new Vector2();
@@ -226,62 +224,6 @@ public class Snake extends GameActor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        //dir.set(touch).sub(position).nor();
-        //velocity.set(dir).scl(4);
-        //movement.set(velocity).scl(0.4f);
-//        if (position.dst2(touch) > movement.len2()) {
-//            position.add(movement);
-//        } else {
-//
-//            if (angleChange) {
-//                angle = position.angleRad(touch);
-//                angleChange = false;
-//
-//                double dx = touch.x - x;
-//                double dy = touch.y - y;
-//                // find angle between that vector and the positive (right1) horizontal axis
-//                // use atan2 so quadrants are handled correctly
-//                angle = Math.atan2(dy, dx);
-//            }
-//
-//            double dx = Math.cos(angle);
-//            double dy = Math.sin(angle);
-//            x += dx * 40;
-//            y += dy * 40;
-//            touch.x = x;
-//            touch.y = y;
-//        }
-
-//        position.add(movement);
-//
-//        if (angleChange) {
-//            angle = position.angleRad(touch);
-//            angleChange = false;
-//
-//            double dx = touch.x - x;
-//            double dy = touch.y - y;
-//            // find angle between that vector and the positive (right1) horizontal axis
-//            // use atan2 so quadrants are handled correctly
-//            angle = Math.atan2(dy, dx);
-//        }
-//
-//        double dx = Math.cos(angle);
-//        double dy = Math.sin(angle);
-//        x += dx * 2;
-//        y += dy * 2;
-//        touch.x = x;
-//        touch.y = y;
-//
-//        double fx = .25f*Math.cos(Math.toRadians(angle));
-//        double fy = .25f*Math.sin(Math.toRadians(angle));
-//        body.applyLinearImpulse((float)fx, (float)fy, this.body.getPosition().x,this.body.getPosition().y,false);
-//        body.setLinearVelocity((float)fx, (float)fy);
-//
-//        x = body.getPosition().x;
-//        y = body.getPosition().y;
-
-        //  batch.end();
-
 
         if (body.getPosition().sub(touch).len() < 3) {
 
@@ -338,18 +280,11 @@ public class Snake extends GameActor {
             batch.draw(snakeBodies.get(i).getSnakeBody(), snakeBodies.get(i).getX(), snakeBodies.get(i).getY());
         }
 
-
-        // body.setTransform(x, y, 0);
         batch.draw(snakeRegion, x, y);
     }
 
     public void setNewHeading(float targetX, float targetY) {
-        // get vector between current position and target point
-//        double dx = targetX - x;
-//        double dy = targetY - y;
-//        // find angle between that vector and the positive (right1) horizontal axis
-//        // use atan2 so quadrants are handled correctly
-//        setTargetAngle(Math.atan2(dy, dx));
+
         touch.set(targetX, targetY);
         angleChange = true;
     }
