@@ -1,0 +1,90 @@
+commit 59e2fcfcf2a48b8bfa9cee008d2cf85c0525a99d
+Author: Nelson Chen <nelsonc@planetshakers.com>
+Date:   Sun Oct 21 17:45:29 2018 +1100
+
+    change app name
+
+commit 4441222ba09ef5494eeee55dd96ddc71691f5ea7
+Author: Nelson Chen <nelsonc@planetshakers.com>
+Date:   Sun Oct 21 17:20:52 2018 +1100
+
+    code clean up and comment
+
+commit 1c9f0957ff1bb6c52d53fe3c8ade1d4e3b33f3d5
+Author: Anup Nepal <Anup>
+Date:   Sun Oct 21 10:26:04 2018 +1100
+
+    added the icon and other things
+
+commit e56ddcd7bf1ec51a3c8b81bfc723249c448a5386
+Author: Anup Nepal <Anup>
+Date:   Sun Oct 21 09:38:53 2018 +1100
+
+    added speed button and completed power ups
+
+commit 78d13b3edc610bb7206980edf24aa31a62b59b52
+Author: Anup Nepal <Anup>
+Date:   Sun Oct 21 00:23:47 2018 +1100
+
+    added score, radar, top players, rank, power ups in progress
+
+commit e0f30a468b4d24be88ae1a033fde283a42e628e0
+Author: Anup Nepal <Anup>
+Date:   Sat Oct 20 13:11:54 2018 +1100
+
+    make changed skin effect working
+
+commit 3d4e87824e9e3114ec912249f0cd0c7504dd9aa6
+Author: Anup Nepal <Anup>
+Date:   Sat Oct 20 12:58:09 2018 +1100
+
+    added a lot of things
+
+commit bf09034b8e4ae502288ece39ec80f29fbc5f8bef
+Author: Anup Nepal <Anup>
+Date:   Tue Sep 25 06:52:59 2018 +1000
+
+    added robert's snake code in libgdx
+
+commit 3393b99e35da102cd64a050eb74f97928dc5dd17
+Author: unknown <Anup>
+Date:   Mon Sep 24 11:26:52 2018 +1000
+
+    added libgdx version
+
+commit d72fd69f06c71ea25cfa5197ce39ac2c04f22039
+Author: robert <smithr2@student.unimelb.edu.au>
+Date:   Sat Sep 15 18:16:22 2018 +1000
+
+    Huge clean up and basic snake movement
+
+commit 13f1a0251a6b46cb622b93c065d682f398293928
+Merge: 52f11ce 3a21a9a
+Author: robert <smithr2@student.unimelb.edu.au>
+Date:   Sat Sep 15 18:03:43 2018 +1000
+
+    Merge remote-tracking branch 'origin/master'
+
+commit 52f11cefccacb7ded31ec506f56a5fed08790f03
+Author: robert <smithr2@student.unimelb.edu.au>
+Date:   Sat Sep 15 13:49:17 2018 +1000
+
+    Anup's test game
+
+commit 3a21a9a754bd68541bc916ca60993917db449794
+Author: smithr3 <43286315+smithr3@users.noreply.github.com>
+Date:   Sat Sep 15 13:40:01 2018 +1000
+
+    Create README.md
+
+commit 7608fc3bcff0b865cdd2d94089a2c4747ca7ce29
+Author: robert <smithr2@student.unimelb.edu.au>
+Date:   Sat Sep 15 13:38:14 2018 +1000
+
+    Hello World
+
+commit 57362916828f582c89a3a9118ee0a014ab2841c2
+Author: robert <smithr2@student.unimelb.edu.au>
+Date:   Sat Sep 15 12:56:16 2018 +1000
+
+    Initial commit
