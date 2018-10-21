@@ -30,8 +30,6 @@ public class Background extends Actor {
 
         textureRegion = new TextureRegion(imgTexture);
 
-
-
         camera=camera;
 
         parallaxBackground = new ParallaxBackground(new ParallaxLayer[]{
@@ -56,9 +54,6 @@ public class Background extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-       // batch.draw(textureRegion,camera.position.x , camera.position.y);
-       // batch.draw(textureRegion, textureRegionBounds2.x, textureRegionBounds2.y);
-
     }
 
     private boolean leftBoundsReached(float delta) {

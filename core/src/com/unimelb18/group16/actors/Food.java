@@ -42,7 +42,6 @@ public class Food extends GameActor {
             stateTime += Gdx.graphics.getDeltaTime();
         }
 
-//        batch.draw(jumpingTexture, body.getPosition().x, body.getPosition().y);
         shapeRenderer.setProjectionMatrix(camera.combined);
         batch.end();
         shapeRenderer.setColor(Color.PINK);
@@ -50,9 +49,6 @@ public class Food extends GameActor {
         shapeRenderer.circle(body.getPosition().x, body.getPosition().y, 10);
         shapeRenderer.end();
         batch.begin();
-
-//        batch.draw((TextureRegion) animation.getKeyFrame(stateTime, true), (screenRectangle.x - (screenRectangle.width * 0.1f)),
-//                screenRectangle.y, screenRectangle.width * 1.2f, screenRectangle.height * 1.1f);
     }
 
 }

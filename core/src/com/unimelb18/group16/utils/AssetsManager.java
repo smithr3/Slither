@@ -118,7 +118,6 @@ public class AssetsManager {
         }
 
         return new Animation(0.1f, runningFrames);
-
     }
 
     public static TextureAtlas getTextureAtlas() {

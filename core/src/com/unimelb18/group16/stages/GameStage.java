@@ -121,14 +121,15 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
     public GameStage() {
         shape = new ShapeRenderer();
 
+        // Set up camera controls and menu settings
         setUpCamera();
         setUpStageBase();
         setUpGameLabel();
         setUpMainMenu();
+
+        // Initialise game objects
         destroyBodyList = new ArrayList<Body>();
-
         foodOnDeath = new ArrayList<Vector2>();
-
         enemySnakes = new ArrayList<Snake>();
 
         setUpTouchControlAreas();
@@ -143,14 +144,12 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
         AudioUtils.getInstance().init();
 
-        //    createGround();
-        // createBox();
-
         onGameOver();
-
-
     }
 
+    /**
+     * Set up game map arena
+     */
     private void setUpStageBase() {
         setUpWorld();
 
@@ -158,31 +157,44 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         WorldUtils.createRightWorldEnd(world);
         WorldUtils.createTopWorldEnd(world);
         WorldUtils.createBottomWorldEnd(world);
-
-
     }
 
+    /**
+     * Set up mini map on the bottom left of the screen
+     */
     private void setUpMiniMap() {
         miniMap = new MiniMap(getCamera());
         addActor(miniMap);
     }
 
+    /**
+     * Set up scoreboard and ranking on the bottom left of the map
+     */
     private void setUpScoreLabel() {
         scoreLabel = new ScoreLabel();
         addActor(scoreLabel);
     }
 
+    /**
+     * Set up player rankings on the top right of the map
+     */
     private void setUpTopTenPlayerLabel() {
         topTenPlayerLabel = new TopTenPlayerLabel();
         addActor(topTenPlayerLabel);
     }
 
+    /**
+     * Set up game title on the main menu
+     */
     private void setUpGameLabel() {
         Rectangle gameLabelBounds = new Rectangle(0, getCamera().viewportHeight * 7 / 8,
                 getCamera().viewportWidth, getCamera().viewportHeight / 4);
         addActor(new GameLabel(gameLabelBounds));
     }
 
+    /**
+     * Set up change snake skin on the main menu
+     */
     private void setUpChangeSkinSnake() {
         Rectangle snakeSkinBounds = new Rectangle(getCamera().viewportWidth, getCamera().viewportHeight,
                 getCamera().viewportWidth, getCamera().viewportHeight);
@@ -206,6 +218,9 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         setUpMusic();
     }
 
+    /**
+     * Set up sound toggle button
+     */
     private void setUpSound() {
         Rectangle soundButtonBounds = new Rectangle(getCamera().viewportWidth / 64,
                 getCamera().viewportHeight * 13 / 20, getCamera().viewportHeight / 10,
@@ -214,6 +229,9 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         addActor(soundButton);
     }
 
+    /**
+     * Set up music toggle button
+     */
     private void setUpMusic() {
         Rectangle musicButtonBounds = new Rectangle(getCamera().viewportWidth / 64,
                 getCamera().viewportHeight * 4 / 5, getCamera().viewportHeight / 10,
@@ -252,7 +270,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
         setUpNameField();
         setUpFixedMenu();
-
     }
 
     private void addSettingsButton() {
@@ -477,8 +494,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             speedButton = new SpeedButton(getCamera(), new GameSpeedButtonListener());
             addActor(speedButton);
         }
-
-
     }
 
     private void setUpTutorial() {
@@ -723,7 +738,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     public boolean touchDragged(int x, int y, int pointer) {
 
-
         translateScreenToWorldCoordinates(x, y);
 
         if (GameManager.getInstance().getGameState() != GameState.RUNNING) {
@@ -755,15 +769,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             return super.touchDown(x, y, pointer, button);
         }
 
-
         snake.setNewHeading(touchPoint.x, touchPoint.y);
-
-
-//        if (rightSideTouched(touchPoint.x, touchPoint.y)) {
-//            runner.jump();
-//        } else if (leftSideTouched(touchPoint.x, touchPoint.y)) {
-//            runner.dodge();
-//        }
 
         return super.touchDown(x, y, pointer, button);
     }
@@ -776,20 +782,11 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
                 snake.setBoosting(false);
 
             }
-
         }
-
 
         if (GameManager.getInstance().getGameState() != GameState.RUNNING) {
             return super.touchUp(screenX, screenY, pointer, button);
         }
-
-        // runner.setNewHeading(screenX, screenY);
-
-
-//        if (runner.isDodging()) {
-//            runner.stopDodge();
-//        }
 
         return super.touchUp(screenX, screenY, pointer, button);
     }
@@ -805,12 +802,8 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
                 break;
             case RUNNING:
             case PAUSED:
-//                touched = pauseButton.getBounds().contains(x, y);
                 break;
         }
-
-//        return touched || soundButton.getBounds().contains(x, y)
-//                || musicButton.getBounds().contains(x, y);
 
         return false;
     }
@@ -998,8 +991,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     @Override
     public void endContact(Contact contact) {
-//        Fixture fixtureA = contact.getFixtureA();
-//        Fixture fixtureB = contact.getFixtureB();
 
     }
 
