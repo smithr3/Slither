@@ -22,6 +22,16 @@ package com.unimelb18.group16.utils;
  */
 public interface GameEventListener {
 
+    void setJoinedData(String name, float x, float y, int length);
+
+    String getSnakeData();
+
+    void updateNewData(String name, float x, float y, int length);
+
+    void getOtherData(String name);
+
+    void deletePlayer(String name);
+
     /**
      * Displays an ad
      */

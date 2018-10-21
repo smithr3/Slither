@@ -17,6 +17,8 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.unimelb18.group16.actors.ChangeSkinSnake;
 import com.unimelb18.group16.actors.Food;
 import com.unimelb18.group16.actors.MiniMap;
@@ -118,6 +120,8 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
     private int maxSnakes = 0;
     private Vector3 touchPoint;
 
+    private boolean isMultiPlayer = false;
+
     public GameStage() {
         shape = new ShapeRenderer();
 
@@ -142,9 +146,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         Gdx.input.setInputProcessor(inputMultiplexer);
 
         AudioUtils.getInstance().init();
-
-        //    createGround();
-        // createBox();
 
         onGameOver();
 
@@ -378,12 +379,10 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         world.setContactListener(this);
 
         setUpBackground();
-        // setUpGround();
 
     }
 
     private void setUpBackground() {
-        // addActor(new Background(getCamera()));
     }
 
 
@@ -391,14 +390,13 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
         setUpSnakePlay();
 
-        //  setUpRunner();
         setUpPauseLabel();
-        //   createEnemy();
 
         Random random = new Random();
 
         createFood(random.nextInt((int) getCamera().viewportWidth), random.nextInt((int) getCamera().viewportHeight));
     }
+
     private void setUpSnakePlay() {
         if (snake != null) {
             snake.remove();
@@ -413,7 +411,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         }
 
 
-        snake = new Snake(WorldUtils.createSnakeHead(world, getCamera().position.x, getCamera().position.y), randomIdentifier(), currentColor);
+        snake = new Snake(WorldUtils.createSnakeHead(world, getCamera().position.x, getCamera().position.y), randomIdentifier(), currentColor, "", 5);
         snake.setCamera(getCamera());
         addActor(snake);
 
@@ -434,7 +432,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     private void addEnemySnake() {
         Random random = new Random();
-        Snake snake = new Snake(WorldUtils.createSnakeHead(world, random.nextInt(Constants.APP_WIDTH - 500), random.nextInt(Constants.APP_HEIGHT - 500)), randomIdentifier(), random.nextInt(4));
+        Snake snake = new Snake(WorldUtils.createSnakeHead(world, random.nextInt(Constants.APP_WIDTH - 500), random.nextInt(Constants.APP_HEIGHT - 500)), randomIdentifier(), random.nextInt(4), "", 5);
         enemySnakes.add(snake);
         addActor(snake);
     }
@@ -479,15 +477,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
         }
 
 
-    }
-
-    private void setUpTutorial() {
-        if (tutorialShown) {
-            return;
-        }
-        setUpLeftTutorial();
-        setUpRightTutorial();
-        tutorialShown = true;
     }
 
     private void setUpLeftTutorial() {
@@ -550,6 +539,44 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
         if (GameManager.getInstance().getGameState() == GameState.RUNNING) {
 
+            if (isMultiPlayer) {
+
+                GameManager.getInstance().getOtherData(snake.getUniqueIdentifier());
+                JsonValue json = new JsonReader().parse(GameManager.getInstance().getSnakeData());
+
+                if (json != null) {
+                    JsonValue weaponsJson = json.get("result");
+                    for (JsonValue weaponJson : weaponsJson.iterator()) // iterator() returns a list of children
+                    {
+                        String name = weaponJson.getString("name");
+                        float x = Float.parseFloat(weaponJson.getString("x"));
+                        float y = Float.parseFloat(weaponJson.getString("y"));
+                        int length = Integer.parseInt(weaponJson.getString("size"));
+
+                        boolean snakeFound = false;
+
+                        for (Snake snake : enemySnakes) {
+                            if (name.equals(snake.getUniqueIdentifier())) {
+                                snakeFound = true;
+                            }
+                        }
+
+                        if (!snakeFound) {
+                            Snake snake = new Snake(WorldUtils.createSnakeHead(world, x, y), "", 0, name, length);
+                            enemySnakes.add(snake);
+                            addActor(snake);
+                        }
+
+                    }
+                }
+
+
+                if (timer >= 1f) {
+                    GameManager.getInstance().updateNewData(snake.getUniqueIdentifier(), snake.getX(), snake.getY(), snake.snakeBodies.size());
+                }
+            }
+
+
             if (speedButton != null) {
                 speedButton.setPosition(camera.position.x + camera.viewportWidth * 2 / 5, camera.position.y - camera.viewportHeight * 2 / 5);
             }
@@ -602,17 +629,20 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
             if (timer >= 1f) {
 
-                for (Snake snake : enemySnakes) {
-                    snake.setNewHeading(random.nextInt(Constants.APP_WIDTH - 200), random.nextInt(Constants.APP_HEIGHT - 200));
+                if (!isMultiPlayer) {
+                    for (Snake snake : enemySnakes) {
+                        snake.setNewHeading(random.nextInt(Constants.APP_WIDTH - 200), random.nextInt(Constants.APP_HEIGHT - 200));
+                    }
+
+                    if (maxSnakes < 5) {
+                        addEnemySnake();
+                        maxSnakes++;
+                    }
                 }
 
                 createFood(random.nextInt(Constants.APP_WIDTH), random.nextInt(Constants.APP_HEIGHT));
 
 
-                if (maxSnakes < 5) {
-                    addEnemySnake();
-                    maxSnakes++;
-                }
                 timer -= 1f;
             }
         }
@@ -758,13 +788,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
         snake.setNewHeading(touchPoint.x, touchPoint.y);
 
-
-//        if (rightSideTouched(touchPoint.x, touchPoint.y)) {
-//            runner.jump();
-//        } else if (leftSideTouched(touchPoint.x, touchPoint.y)) {
-//            runner.dodge();
-//        }
-
         return super.touchDown(x, y, pointer, button);
     }
 
@@ -784,13 +807,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             return super.touchUp(screenX, screenY, pointer, button);
         }
 
-        // runner.setNewHeading(screenX, screenY);
-
-
-//        if (runner.isDodging()) {
-//            runner.stopDodge();
-//        }
-
         return super.touchUp(screenX, screenY, pointer, button);
     }
 
@@ -805,12 +821,9 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
                 break;
             case RUNNING:
             case PAUSED:
-//                touched = pauseButton.getBounds().contains(x, y);
                 break;
         }
 
-//        return touched || soundButton.getBounds().contains(x, y)
-//                || musicButton.getBounds().contains(x, y);
 
         return false;
     }
@@ -854,6 +867,8 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
                     destroyBodyList.add(a);
 
+
+                    GameManager.getInstance().deletePlayer(snake.getUniqueIdentifier());
                     onGameOver();
                     displayAd();
                     setUpShare();
@@ -867,6 +882,7 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
                     }
 
                     destroyBodyList.add(b);
+                    GameManager.getInstance().deletePlayer(snake.getUniqueIdentifier());
                     onGameOver();
                     displayAd();
                     setUpShare();
@@ -984,7 +1000,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             String difficultyName = "DIFFICULTY_" + nextDifficulty;
             GameManager.getInstance().setDifficulty(Difficulty.valueOf(difficultyName));
 
-            // runner.onDifficultyChange(GameManager.getInstance().getDifficulty());
             score.setMultiplier(GameManager.getInstance().getDifficulty().getScoreMultiplier());
 
             displayAd();
@@ -998,8 +1013,6 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
 
     @Override
     public void endContact(Contact contact) {
-//        Fixture fixtureA = contact.getFixtureA();
-//        Fixture fixtureB = contact.getFixtureB();
 
     }
 
@@ -1152,10 +1165,9 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             setUpMiniMap();
             setUpScoreLabel();
             setUpTopTenPlayerLabel();
-            //  setUpPause();
-            //   setUpTutorial();
             onGameResumed();
             setUpSpeedButton();
+            isMultiPlayer = false;
         }
 
     }
@@ -1172,10 +1184,11 @@ public class GameStage extends Stage implements ContactListener, GestureDetector
             setUpMiniMap();
             setUpScoreLabel();
             setUpTopTenPlayerLabel();
-            //   setUpPause();
-            //   setUpTutorial();
             onGameResumed();
             setUpSpeedButton();
+            isMultiPlayer = true;
+
+            GameManager.getInstance().setJoinedData(snake.getUniqueIdentifier(), snake.getX(), snake.getY(), snake.snakeBodies.size());
         }
 
     }

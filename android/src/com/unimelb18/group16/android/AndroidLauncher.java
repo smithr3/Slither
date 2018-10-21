@@ -46,6 +46,7 @@ public class AndroidLauncher extends AndroidApplication implements
     Button addButton;
     Handler mHandler;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +61,7 @@ public class AndroidLauncher extends AndroidApplication implements
                 WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+
 
 //        MobileAds.initialize(this, "ca-app-pub-1332753988296742~6854006287");
 
@@ -127,12 +129,37 @@ public class AndroidLauncher extends AndroidApplication implements
         setContentView(layout);
 
 
-        //   mAdView.setVisibility(View.VISIBLE);
-
-        //   gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
-        //   gameHelper.setup(this);
-        //    gameHelper.setMaxAutoSignInAttempts(0);
     }
+
+    @Override
+    public void setJoinedData(String name, float x, float y, int length) {
+        CallAPI callAPI = new CallAPI();
+        callAPI.execute("http://unimelb18group16.biz/android/index.php?type=newPlayer", "name=" + name + "&x=" + x + "&y=" + y + "&length=" + length);
+    }
+
+    @Override
+    public String getSnakeData() {
+        return ResponseData.jsonArray;
+    }
+
+    @Override
+    public void updateNewData(String name, float x, float y, int length) {
+        CallAPI callAPI = new CallAPI();
+        callAPI.execute("http://unimelb18group16.biz/android/index.php?type=updatePlayer", "name=" + name + "&x=" + x + "&y=" + y + "&length=" + length);
+    }
+
+    @Override
+    public void getOtherData(String name) {
+        CallAPI callAPI = new CallAPI();
+        callAPI.execute("http://unimelb18group16.biz/android/index.php?type=otherPlayer", "name=" + name);
+    }
+
+    @Override
+    public void deletePlayer(String name) {
+        CallAPI callAPI = new CallAPI();
+        callAPI.execute("http://unimelb18group16.biz/androfid/index.php?type=deletePlayer", "name=" + name);
+    }
+
 
     @Override
     protected void onStart() {

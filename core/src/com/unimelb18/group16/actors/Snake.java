@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.unimelb18.group16.box2d.SnakeUserData;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Snake extends GameActor {
 
@@ -69,6 +70,16 @@ public class Snake extends GameActor {
     private int headRadius;
     private int tailRadius;
 
+    public String getUniqueIdentifier() {
+        return uniqueIdentifier;
+    }
+
+    public void setUniqueIdentifier(String uniqueIdentifier) {
+        this.uniqueIdentifier = uniqueIdentifier;
+    }
+
+    private String uniqueIdentifier;
+
 
     public Texture snakeHead;
     public Texture snakeBody;
@@ -125,7 +136,7 @@ public class Snake extends GameActor {
         return receivedPowerUp;
     }
 
-    public Snake(Body body, String name, int currentColor) {
+    public Snake(Body body, String name, int currentColor, String uniqueName, int size) {
         super(body);
         //setWidth(bounds.width);
         // setHeight(bounds.height);
@@ -137,6 +148,14 @@ public class Snake extends GameActor {
         movement = new Vector2();
         touch = new Vector2();
         dir = new Vector2();
+
+        if (uniqueName.equals("")) {
+            uniqueIdentifier = UUID.randomUUID().toString();
+        } else {
+            uniqueIdentifier = uniqueName;
+        }
+
+
         stopMovement = false;
 
         receivedPowerUp = new int[5];
@@ -173,8 +192,12 @@ public class Snake extends GameActor {
 
         shapeRenderer = new ShapeRenderer();
 
+        if (size < 5) {
+            size = 5;
+        }
 
-        for (int i = 0; i < 5; i++) {
+
+        for (int i = 0; i < size; i++) {
             snakeBodies.add(new SnakeBody(x, y, snakeColor[this.currentColor]));
         }
 

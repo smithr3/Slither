@@ -76,6 +76,31 @@ public class GameManager implements GameEventListener {
     }
 
     @Override
+    public void setJoinedData(String name, float x, float y, int length) {
+        gameEventListener.setJoinedData(name, x, y, length);
+    }
+
+    @Override
+    public String getSnakeData() {
+       return gameEventListener.getSnakeData();
+    }
+
+    @Override
+    public void updateNewData(String name, float x, float y, int length) {
+        gameEventListener.updateNewData(name, x, y, length);
+    }
+
+    @Override
+    public void getOtherData(String name) {
+        gameEventListener.getOtherData(name);
+    }
+
+    @Override
+    public void deletePlayer(String name) {
+        gameEventListener.deletePlayer(name);
+    }
+
+    @Override
     public void displayAd() {
         gameEventListener.displayAd();
     }
